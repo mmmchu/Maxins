@@ -75,7 +75,7 @@ const Login = () => {
           <div className="space-y-4">
             <div className="flex items-center gap-4 mb-6">
               <img 
-                src="/lovable-uploads/e71d6aef-f1e6-48ed-bcd4-abb4015452cb.png" 
+                src="/uploads/e71d6aef-f1e6-48ed-bcd4-abb4015452cb.png" 
                 alt="NiagaNow Logo" 
                 className="h-16 w-16 object-contain"
               />
