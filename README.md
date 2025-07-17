@@ -28,8 +28,6 @@ This project is built with:
 
 # 🎶 Maxins
 
-Maxins is a modern web-based application built with **React**, **TypeScript**, **Vite**, **Tailwind CSS**, and **shadcn/ui**. It provides a fast and elegant interface for music and MIDI-related functionality.
-
 ---
 
 ## 🚀 Run Maxins Locally in VS Code
