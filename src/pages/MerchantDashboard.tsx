@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -7,16 +6,19 @@ import {
   CreditCard, 
   QrCode, 
   User, 
-  Settings, 
   LogOut,
   TrendingUp,
   Clock,
-  Package
+  Bell,
+  DollarSign,
+  History
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 // Sample data for Mary's Nyonya Kuih business
 const incomeData = {
@@ -69,12 +71,25 @@ const MerchantDashboard = () => {
   };
 
   const sidebarItems = [
-    { icon: Home, label: "Dashboard", active: true },
-    { icon: Building, label: "Register Business" },
-    { icon: CreditCard, label: "Add IC/MyKad" },
-    { icon: QrCode, label: "QR Payment" },
-    { icon: User, label: "Profile" },
-    { icon: Settings, label: "Settings" }
+    { icon: Home, label: "Dashboard", active: true, path: "/merchant-dashboard" },
+    { icon: CreditCard, label: "IC/MyKad", path: "/ic-mykad" },
+    { icon: QrCode, label: "QR Payment", path: "/qr-payment" },
+    { icon: DollarSign, label: "Loans", path: "/loans" },
+    { icon: History, label: "Transaction History", path: "/transaction-history" },
+    { icon: User, label: "Profile", path: "/profile" }
+  ];
+
+  const notifications = [
+    {
+      id: 1,
+      message: "You are eligible to apply for a loan!",
+      type: "success"
+    },
+    {
+      id: 2,
+      message: "Transaction today is RM1,245.25 today!",
+      type: "info"
+    }
   ];
 
   return (
@@ -105,6 +120,7 @@ const MerchantDashboard = () => {
                   ? "bg-primary text-primary-foreground" 
                   : "text-muted-foreground hover:text-foreground"
               }`}
+              onClick={() => item.path && navigate(item.path)}
             >
               <item.icon className="w-5 h-5 mr-3" />
               {item.label}
@@ -138,9 +154,33 @@ const MerchantDashboard = () => {
       {/* Main Content */}
       <div className="flex-1 p-8">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
-            <p className="text-muted-foreground">Welcome back, Mary! Here's your business overview.</p>
+          {/* Header with Notification Bell */}
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+              <p className="text-muted-foreground">Welcome back, Mary! Here's your business overview.</p>
+            </div>
+            
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="icon" className="relative">
+                  <Bell className="w-5 h-5" />
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-red-500 text-white text-xs">
+                    {notifications.length}
+                  </Badge>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80" align="end">
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-foreground">Notifications</h3>
+                  {notifications.map((notification) => (
+                    <div key={notification.id} className="p-3 bg-muted rounded-lg">
+                      <p className="text-sm text-foreground">{notification.message}</p>
+                    </div>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
 
           {/* Income Overview */}
