@@ -50,7 +50,7 @@ const Login = () => {
   const handleLogin = () => {
     // Test credentials: test@gmail.com / 12345678Maxins*
     if (loginData.email === "test@gmail.com" && loginData.password === "12345678Maxins*") {
-      window.location.href = "/dashboard";
+      window.location.href = "/merchant-dashboard";
     } else {
       alert("Invalid credentials. Use test@gmail.com and 12345678Maxins*");
     }
@@ -61,7 +61,7 @@ const Login = () => {
     if (signupData.phoneNumber === "0123456789" && 
         signupData.businessRegNumber === "0123456789123" && 
         signupData.icFile) {
-      window.location.href = "/dashboard";
+      window.location.href = "/merchant-dashboard";
     } else {
       alert("Please use test data: Phone: 0123456789, Business Reg: 0123456789123, and upload a PDF");
     }
@@ -79,7 +79,7 @@ const Login = () => {
                 alt="NiagaNow Logo" 
                 className="h-16 w-16 object-contain"
               />
-              <h1 className="text-4xl xl:text-5xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              <h1 className="text-3xl xl:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 NiagaNow
               </h1>
             </div>
