@@ -40,11 +40,16 @@ const MerchantDashboard = () => {
   const notifications = [
     {
       id: 1,
-      message: "You are eligible to apply for a loan!",
+      message: "Your loan application is eligible!",
       type: "success"
     },
     {
       id: 2,
+      message: "You are qualified for bank/NGO programs!",
+      type: "success"
+    },
+    {
+      id: 3,
       message: "Transaction today is RM1,245.25 today!",
       type: "info"
     }
@@ -194,7 +199,14 @@ const MerchantDashboard = () => {
                 <div className="space-y-4">
                   <h3 className="font-semibold text-foreground">Notifications</h3>
                   {notifications.map((notification) => (
-                    <div key={notification.id} className="p-3 bg-muted rounded-lg">
+                    <div 
+                      key={notification.id} 
+                      className={`p-3 rounded-lg ${
+                        notification.type === 'success' 
+                          ? 'bg-green-50 border border-green-200' 
+                          : 'bg-muted'
+                      }`}
+                    >
                       <p className="text-sm text-foreground">{notification.message}</p>
                     </div>
                   ))}

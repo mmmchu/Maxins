@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +9,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import MerchantDashboard from "./pages/MerchantDashboard";
+import QRPayment from "./pages/QRPayment";
 import NotFound from "./pages/NotFound";
 
 import Profile from "./pages/Profile";
@@ -28,6 +30,7 @@ const App = () => (
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/merchant-dashboard" element={<MerchantDashboard />} />
+          <Route path="/qr-payment" element={<QRPayment />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/loans" element={<Loans />} />
           <Route path="/transaction-history" element={<TransactionHistory />} />
