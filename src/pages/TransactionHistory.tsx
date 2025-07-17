@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { 
   Home, 
@@ -6,12 +7,15 @@ import {
   LogOut,
   Bell,
   DollarSign,
-  History
+  History,
+  ArrowUpRight,
+  ArrowDownLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const TransactionHistory = () => {
   const navigate = useNavigate();
@@ -37,6 +41,109 @@ const TransactionHistory = () => {
       id: 2,
       message: "Transaction today is RM1,245.25 today!",
       type: "info"
+    }
+  ];
+
+  const transactions = [
+    {
+      id: "TXN001",
+      date: "2025-01-17",
+      time: "14:30",
+      description: "Kuih Lapis Sale",
+      customer: "Ahmad Hassan",
+      amount: 25.50,
+      type: "credit",
+      status: "completed"
+    },
+    {
+      id: "TXN002",
+      date: "2025-01-17",
+      time: "13:15",
+      description: "Onde-onde & Kuih Ketayap",
+      customer: "Siti Nurhaliza",
+      amount: 18.00,
+      type: "credit",
+      status: "completed"
+    },
+    {
+      id: "TXN003",
+      date: "2025-01-17",
+      time: "12:45",
+      description: "Kuih Dadar & Tart Nenas",
+      customer: "Lim Wei Ming",
+      amount: 32.00,
+      type: "credit",
+      status: "completed"
+    },
+    {
+      id: "TXN004",
+      date: "2025-01-17",
+      time: "11:20",
+      description: "Ingredient Purchase",
+      customer: "Tesco Supermarket",
+      amount: -85.50,
+      type: "debit",
+      status: "completed"
+    },
+    {
+      id: "TXN005",
+      date: "2025-01-16",
+      time: "16:00",
+      description: "Kuih Bahulu Bulk Order",
+      customer: "Restaurant Seri Rasa",
+      amount: 120.00,
+      type: "credit",
+      status: "completed"
+    },
+    {
+      id: "TXN006",
+      date: "2025-01-16",
+      time: "15:30",
+      description: "Kuih Talam & Pulut Tai Tai",
+      customer: "Nurul Ain",
+      amount: 28.50,
+      type: "credit",
+      status: "completed"
+    },
+    {
+      id: "TXN007",
+      date: "2025-01-16",
+      time: "14:15",
+      description: "Coconut Milk & Pandan",
+      customer: "Pasar Borong",
+      amount: -45.00,
+      type: "debit",
+      status: "completed"
+    },
+    {
+      id: "TXN008",
+      date: "2025-01-16",
+      time: "10:45",
+      description: "Kuih Seri Muka Set",
+      customer: "Fatimah Abdullah",
+      amount: 22.00,
+      type: "credit",
+      status: "completed"
+    },
+    {
+      id: "TXN009",
+      date: "2025-01-15",
+      time: "17:20",
+      description: "Mixed Kuih Platter",
+      customer: "Office Catering Order",
+      amount: 95.00,
+      type: "credit",
+      status: "completed"
+    },
+    {
+      id: "TXN010",
+      date: "2025-01-15",
+      time: "09:30",
+      description: "Gas Cylinder Refill",
+      customer: "Gas Station",
+      amount: -35.00,
+      type: "debit",
+      status: "completed"
     }
   ];
 
@@ -140,10 +247,55 @@ const TransactionHistory = () => {
         <Card>
           <CardHeader>
             <CardTitle>Recent Transactions</CardTitle>
-            <CardDescription>A list of your recent transactions</CardDescription>
+            <CardDescription>A list of your recent business transactions</CardDescription>
           </CardHeader>
           <CardContent>
-            <p>This is where the transaction history will be displayed.</p>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date & Time</TableHead>
+                  <TableHead>Transaction ID</TableHead>
+                  <TableHead>Description</TableHead>
+                  <TableHead>Customer/Vendor</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {transactions.map((transaction) => (
+                  <TableRow key={transaction.id}>
+                    <TableCell>
+                      <div className="text-sm">
+                        <div className="font-medium">{transaction.date}</div>
+                        <div className="text-muted-foreground">{transaction.time}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-mono text-sm">{transaction.id}</TableCell>
+                    <TableCell>{transaction.description}</TableCell>
+                    <TableCell>{transaction.customer}</TableCell>
+                    <TableCell>
+                      <div className={`flex items-center gap-1 ${
+                        transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
+                      }`}>
+                        {transaction.type === 'credit' ? (
+                          <ArrowUpRight className="w-4 h-4" />
+                        ) : (
+                          <ArrowDownLeft className="w-4 h-4" />
+                        )}
+                        <span className="font-medium">
+                          RM{Math.abs(transaction.amount).toFixed(2)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={transaction.status === 'completed' ? 'default' : 'secondary'}>
+                        {transaction.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
       </div>

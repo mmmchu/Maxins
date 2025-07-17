@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
   Home, 
@@ -7,15 +8,21 @@ import {
   LogOut,
   Bell,
   DollarSign,
-  History
+  History,
+  CheckCircle2,
+  Clock,
+  AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import LoanEligibilityForm from "@/components/LoanEligibilityForm";
 
 const Loans = () => {
   const navigate = useNavigate();
+  const [showEligibilityForm, setShowEligibilityForm] = useState(false);
 
   const handleLogout = () => {
     navigate("/login");
@@ -38,6 +45,36 @@ const Loans = () => {
       id: 2,
       message: "Transaction today is RM1,245.25 today!",
       type: "info"
+    }
+  ];
+
+  const loanProducts = [
+    {
+      id: 1,
+      name: "SME Working Capital Loan",
+      description: "Quick access to working capital for daily operations",
+      interestRate: "5.5% - 8.5%",
+      maxAmount: "RM50,000",
+      tenure: "12 - 36 months",
+      features: ["Quick approval", "Flexible repayment", "No collateral required"]
+    },
+    {
+      id: 2,
+      name: "Equipment Financing",
+      description: "Finance new equipment to grow your business",
+      interestRate: "6.0% - 9.0%",
+      maxAmount: "RM100,000",
+      tenure: "24 - 60 months",
+      features: ["Equipment as collateral", "Competitive rates", "Long tenure"]
+    },
+    {
+      id: 3,
+      name: "Business Expansion Loan",
+      description: "Fund your business expansion plans",
+      interestRate: "7.0% - 10.0%",
+      maxAmount: "RM200,000",
+      tenure: "36 - 84 months",
+      features: ["Large loan amounts", "Flexible usage", "Structured repayment"]
     }
   ];
 
@@ -112,7 +149,7 @@ const Loans = () => {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-foreground mb-2">Loans</h1>
-            <p className="text-muted-foreground">Explore our loan options</p>
+            <p className="text-muted-foreground">Explore our loan options to grow your business</p>
           </div>
           
           <Popover>
@@ -137,17 +174,119 @@ const Loans = () => {
           </Popover>
         </div>
 
-        {/* Loans Content */}
-        <Card>
+        {/* Eligibility Check Card */}
+        <Card className="mb-8 bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
           <CardHeader>
-            <CardTitle>Available Loan Options</CardTitle>
-            <CardDescription>Check out our competitive loan options</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              Check Your Loan Eligibility
+            </CardTitle>
+            <CardDescription>
+              Complete our quick assessment to see if you qualify for a business loan
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <p>No loan options available at the moment. Please check back later.</p>
+            <Button 
+              variant="banking" 
+              size="lg"
+              onClick={() => setShowEligibilityForm(true)}
+              className="w-full sm:w-auto"
+            >
+              Start Eligibility Check
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Loan Products */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {loanProducts.map((product) => (
+            <Card key={product.id} className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <CardTitle className="text-lg">{product.name}</CardTitle>
+                <CardDescription>{product.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Interest Rate:</span>
+                    <span className="font-medium">{product.interestRate}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Max Amount:</span>
+                    <span className="font-medium">{product.maxAmount}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Tenure:</span>
+                    <span className="font-medium">{product.tenure}</span>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Key Features:</p>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    {product.features.map((feature, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <CheckCircle2 className="w-3 h-3 text-green-500 flex-shrink-0" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => setShowEligibilityForm(true)}
+                >
+                  Apply Now
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Additional Information */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Why Choose NiagaNow Business Loans?</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center space-y-2">
+                <Clock className="w-8 h-8 text-primary mx-auto" />
+                <h3 className="font-semibold">Quick Processing</h3>
+                <p className="text-sm text-muted-foreground">
+                  Get approval within 24-48 hours with minimal documentation
+                </p>
+              </div>
+              <div className="text-center space-y-2">
+                <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto" />
+                <h3 className="font-semibold">Flexible Terms</h3>
+                <p className="text-sm text-muted-foreground">
+                  Customized repayment plans to suit your business cash flow
+                </p>
+              </div>
+              <div className="text-center space-y-2">
+                <AlertCircle className="w-8 h-8 text-blue-500 mx-auto" />
+                <h3 className="font-semibold">Expert Support</h3>
+                <p className="text-sm text-muted-foreground">
+                  Dedicated relationship managers to guide you through the process
+                </p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Eligibility Form Dialog */}
+      <Dialog open={showEligibilityForm} onOpenChange={setShowEligibilityForm}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Loan Eligibility Assessment</DialogTitle>
+          </DialogHeader>
+          <LoanEligibilityForm onClose={() => setShowEligibilityForm(false)} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
