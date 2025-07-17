@@ -77,9 +77,9 @@ const Login = () => {
               <img 
                 src="/uploads/e71d6aef-f1e6-48ed-bcd4-abb4015452cb.png" 
                 alt="NiagaNow Logo" 
-                className="h-10 w-10 object-contain"
+                className="h-8 w-8 object-contain"
               />
-              <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              <h1 className="text-lg font-bold bg-gradient-primary bg-clip-text text-transparent">
                 NiagaNow
               </h1>
             </div>
@@ -151,8 +151,11 @@ const Login = () => {
                   <TabsTrigger value="signup">Sign Up</TabsTrigger>
                 </TabsList>
                 
-                <TabsContent value="login" className="space-y-4">
-                  <div className="space-y-4">
+                <TabsContent 
+                  value="login" 
+                  className="space-y-4 min-h-[400px] transition-all duration-300 ease-in-out"
+                >
+                  <div className="space-y-4 pt-4">
                     <div className="space-y-2">
                       <Label htmlFor="email">Email Address</Label>
                       <Input
@@ -196,7 +199,7 @@ const Login = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-sm">
+                  <div className="flex items-center justify-between text-sm pt-2">
                     <Link 
                       to="/forgot-password" 
                       className="text-primary hover:text-primary-glow transition-colors"
@@ -205,21 +208,26 @@ const Login = () => {
                     </Link>
                   </div>
 
-                  <Button 
-                    variant="banking" 
-                    className="w-full h-11 text-base"
-                    onClick={handleLogin}
-                  >
-                    Sign In Securely
-                  </Button>
+                  <div className="pt-4">
+                    <Button 
+                      variant="banking" 
+                      className="w-full h-11 text-base"
+                      onClick={handleLogin}
+                    >
+                      Sign In Securely
+                    </Button>
+                  </div>
 
-                  <div className="text-xs text-center text-muted-foreground">
+                  <div className="text-xs text-center text-muted-foreground pt-2">
                     Test credentials: test@gmail.com / 12345678Maxins*
                   </div>
                 </TabsContent>
                 
-                <TabsContent value="signup" className="space-y-4">
-                  <div className="space-y-4">
+                <TabsContent 
+                  value="signup" 
+                  className="space-y-4 min-h-[400px] transition-all duration-300 ease-in-out"
+                >
+                  <div className="space-y-4 pt-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Full Name</Label>
@@ -325,15 +333,17 @@ const Login = () => {
                     </div>
                   </div>
 
-                  <Button 
-                    variant="banking" 
-                    className="w-full h-11 text-base"
-                    onClick={handleSignup}
-                  >
-                    Create Account
-                  </Button>
+                  <div className="pt-4">
+                    <Button 
+                      variant="banking" 
+                      className="w-full h-11 text-base"
+                      onClick={handleSignup}
+                    >
+                      Create Account
+                    </Button>
+                  </div>
 
-                  <div className="text-xs text-center text-muted-foreground">
+                  <div className="text-xs text-center text-muted-foreground pt-2">
                     Test data: Phone: 0123456789, Business Reg: 0123456789123
                   </div>
                 </TabsContent>
