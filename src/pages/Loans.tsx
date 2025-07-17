@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { 
   Home, 
@@ -133,7 +134,7 @@ const Loans = () => {
                 ))}
               </div>
             </PopoverContent>
-          </div>
+          </Popover>
         </div>
 
         {/* Loans Content */}
