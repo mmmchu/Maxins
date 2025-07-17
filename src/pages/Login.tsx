@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Eye, EyeOff, Shield, Smartphone, CreditCard, Upload, FileText } from "lucide-react";
+import { Eye, EyeOff, Shield, Smartphone, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,7 +24,6 @@ const Login = () => {
     businessName: "",
     phoneNumber: "",
     icNumber: "",
-    icFile: null as File | null,
     businessRegNumber: "",
   });
 
@@ -49,16 +48,6 @@ const Login = () => {
     });
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && file.type === "application/pdf") {
-      setSignupData({
-        ...signupData,
-        icFile: file,
-      });
-    }
-  };
-
   const handleLogin = () => {
     // Test credentials: test@gmail.com / 12345678Maxins*
     if (loginData.email === "test@gmail.com" && loginData.password === "12345678Maxins*") {
@@ -71,27 +60,26 @@ const Login = () => {
   const handleSignup = () => {
     // Test data validation
     if (signupData.phoneNumber === "0123456789" && 
-        signupData.businessRegNumber === "0123456789123" && 
-        signupData.icFile) {
+        signupData.businessRegNumber === "0123456789123") {
       window.location.href = "/merchant-dashboard";
     } else {
-      alert("Please use test data: Phone: 0123456789, Business Reg: 0123456789123, and upload a PDF");
+      alert("Please use test data: Phone: 0123456789, Business Reg: 0123456789123");
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/20 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-8 items-center">
+      <div className="w-full max-w-7xl grid lg:grid-cols-2 gap-8 items-center">
         {/* Hero Section */}
         <div className="hidden lg:block space-y-6 animate-fade-in">
           <div className="space-y-4">
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center gap-3 mb-6">
               <img 
                 src="/uploads/e71d6aef-f1e6-48ed-bcd4-abb4015452cb.png" 
                 alt="NiagaNow Logo" 
-                className="h-12 w-12 object-contain"
+                className="h-10 w-10 object-contain"
               />
-              <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 NiagaNow
               </h1>
             </div>
@@ -145,7 +133,7 @@ const Login = () => {
         </div>
 
         {/* Login/Signup Form */}
-        <div className="w-full max-w-md mx-auto animate-slide-up">
+        <div className="w-full max-w-2xl mx-auto animate-slide-up">
           <Card className="shadow-card border-border">
             <CardHeader className="space-y-2 text-center">
               <div className="mx-auto w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mb-4">
@@ -232,114 +220,94 @@ const Login = () => {
                 
                 <TabsContent value="signup" className="space-y-4">
                   <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        type="text"
-                        placeholder="Enter your full name"
-                        value={signupData.name}
-                        onChange={handleSignupChange}
-                        className="h-11"
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="gender">Gender</Label>
-                      <Select onValueChange={handleGenderChange} value={signupData.gender}>
-                        <SelectTrigger className="h-11">
-                          <SelectValue placeholder="Select your gender" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="male">Male</SelectItem>
-                          <SelectItem value="female">Female</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={signupData.email}
-                        onChange={handleSignupChange}
-                        className="h-11"
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="businessName">Business Name</Label>
-                      <Input
-                        id="businessName"
-                        name="businessName"
-                        type="text"
-                        placeholder="Enter your business name"
-                        value={signupData.businessName}
-                        onChange={handleSignupChange}
-                        className="h-11"
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="phoneNumber">Phone Number</Label>
-                      <Input
-                        id="phoneNumber"
-                        name="phoneNumber"
-                        type="tel"
-                        placeholder="Enter your phone number"
-                        value={signupData.phoneNumber}
-                        onChange={handleSignupChange}
-                        className="h-11"
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="icNumber">IC Number (MyKad)</Label>
-                      <Input
-                        id="icNumber"
-                        name="icNumber"
-                        type="text"
-                        placeholder="Enter your IC number"
-                        value={signupData.icNumber}
-                        onChange={handleSignupChange}
-                        className="h-11"
-                        required
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="icFile">Upload IC (MyKad) PDF</Label>
-                      <div className="relative">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Full Name</Label>
                         <Input
-                          id="icFile"
-                          type="file"
-                          accept=".pdf"
-                          onChange={handleFileUpload}
-                          className="h-11 cursor-pointer"
+                          id="name"
+                          name="name"
+                          type="text"
+                          placeholder="Enter your full name"
+                          value={signupData.name}
+                          onChange={handleSignupChange}
+                          className="h-11"
                           required
                         />
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                          {signupData.icFile ? (
-                            <FileText className="h-4 w-4 text-primary" />
-                          ) : (
-                            <Upload className="h-4 w-4 text-muted-foreground" />
-                          )}
-                        </div>
                       </div>
-                      {signupData.icFile && (
-                        <p className="text-xs text-primary">
-                          Selected: {signupData.icFile.name}
-                        </p>
-                      )}
+
+                      <div className="space-y-2">
+                        <Label htmlFor="gender">Gender</Label>
+                        <Select onValueChange={handleGenderChange} value={signupData.gender}>
+                          <SelectTrigger className="h-11">
+                            <SelectValue placeholder="Select your gender" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="male">Male</SelectItem>
+                            <SelectItem value="female">Female</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email Address</Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          placeholder="Enter your email"
+                          value={signupData.email}
+                          onChange={handleSignupChange}
+                          className="h-11"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="businessName">Business Name</Label>
+                        <Input
+                          id="businessName"
+                          name="businessName"
+                          type="text"
+                          placeholder="Enter your business name"
+                          value={signupData.businessName}
+                          onChange={handleSignupChange}
+                          className="h-11"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="phoneNumber">Phone Number</Label>
+                        <Input
+                          id="phoneNumber"
+                          name="phoneNumber"
+                          type="tel"
+                          placeholder="Enter your phone number"
+                          value={signupData.phoneNumber}
+                          onChange={handleSignupChange}
+                          className="h-11"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="icNumber">IC Number (MyKad)</Label>
+                        <Input
+                          id="icNumber"
+                          name="icNumber"
+                          type="text"
+                          placeholder="Enter your IC number"
+                          value={signupData.icNumber}
+                          onChange={handleSignupChange}
+                          className="h-11"
+                          required
+                        />
+                      </div>
                     </div>
 
                     <div className="space-y-2">
@@ -366,7 +334,7 @@ const Login = () => {
                   </Button>
 
                   <div className="text-xs text-center text-muted-foreground">
-                    Test data: Phone: 0123456789, Business Reg: 0123456789123, Upload any PDF
+                    Test data: Phone: 0123456789, Business Reg: 0123456789123
                   </div>
                 </TabsContent>
               </Tabs>

@@ -62,8 +62,7 @@ const Profile = () => {
     { icon: Home, label: "Dashboard", path: "/merchant-dashboard" },
     { icon: QrCode, label: "QR Payment", path: "/qr-payment" },
     { icon: DollarSign, label: "Loans", path: "/loans" },
-    { icon: History, label: "Transaction History", path: "/transaction-history" },
-    { icon: User, label: "Profile", active: true, path: "/profile" }
+    { icon: History, label: "Transaction History", path: "/transaction-history" }
   ];
 
   const notifications = [
@@ -101,12 +100,8 @@ const Profile = () => {
           {sidebarItems.map((item, index) => (
             <Button
               key={index}
-              variant={item.active ? "default" : "ghost"}
-              className={`w-full justify-start h-12 ${
-                item.active 
-                  ? "bg-primary text-primary-foreground" 
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              variant="ghost"
+              className="w-full justify-start h-12 text-muted-foreground hover:text-foreground"
               onClick={() => item.path && navigate(item.path)}
             >
               <item.icon className="w-5 h-5 mr-3" />
@@ -117,15 +112,21 @@ const Profile = () => {
 
         {/* User Profile Section */}
         <div className="mt-auto pt-6 border-t border-border">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
-              <User className="w-5 h-5 text-primary-foreground" />
+          <Button
+            variant="ghost"
+            className="w-full justify-start p-0 h-auto mb-4 bg-primary/10"
+            onClick={() => navigate("/profile")}
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
+                <User className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div>
+                <p className="font-medium text-foreground">Mary</p>
+                <p className="text-sm text-muted-foreground">Nyonya Kuih Seller</p>
+              </div>
             </div>
-            <div>
-              <p className="font-medium text-foreground">Mary</p>
-              <p className="text-sm text-muted-foreground">Nyonya Kuih Seller</p>
-            </div>
-          </div>
+          </Button>
           
           <Button 
             variant="ghost" 
