@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import bankingHero from "@/assets/banking-hero.jpg";
 
 const Login = () => {
@@ -17,6 +18,10 @@ const Login = () => {
     password: "",
   });
   const [signupData, setSignupData] = useState({
+    name: "",
+    gender: "",
+    email: "",
+    businessName: "",
     phoneNumber: "",
     icNumber: "",
     icFile: null as File | null,
@@ -34,6 +39,13 @@ const Login = () => {
     setSignupData({
       ...signupData,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleGenderChange = (value: string) => {
+    setSignupData({
+      ...signupData,
+      gender: value,
     });
   };
 
@@ -77,9 +89,9 @@ const Login = () => {
               <img 
                 src="/uploads/e71d6aef-f1e6-48ed-bcd4-abb4015452cb.png" 
                 alt="NiagaNow Logo" 
-                className="h-16 w-16 object-contain"
+                className="h-12 w-12 object-contain"
               />
-              <h1 className="text-3xl xl:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                 NiagaNow
               </h1>
             </div>
@@ -220,6 +232,62 @@ const Login = () => {
                 
                 <TabsContent value="signup" className="space-y-4">
                   <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Full Name</Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        type="text"
+                        placeholder="Enter your full name"
+                        value={signupData.name}
+                        onChange={handleSignupChange}
+                        className="h-11"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="gender">Gender</Label>
+                      <Select onValueChange={handleGenderChange} value={signupData.gender}>
+                        <SelectTrigger className="h-11">
+                          <SelectValue placeholder="Select your gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email Address</Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={signupData.email}
+                        onChange={handleSignupChange}
+                        className="h-11"
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="businessName">Business Name</Label>
+                      <Input
+                        id="businessName"
+                        name="businessName"
+                        type="text"
+                        placeholder="Enter your business name"
+                        value={signupData.businessName}
+                        onChange={handleSignupChange}
+                        className="h-11"
+                        required
+                      />
+                    </div>
+
                     <div className="space-y-2">
                       <Label htmlFor="phoneNumber">Phone Number</Label>
                       <Input

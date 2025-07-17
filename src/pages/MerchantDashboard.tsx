@@ -1,70 +1,30 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
   Home, 
-  Building, 
-  CreditCard, 
   QrCode, 
   User, 
   LogOut,
-  TrendingUp,
-  Clock,
   Bell,
   DollarSign,
-  History
+  History,
+  TrendingUp,
+  Clock,
+  Calendar,
+  ArrowUp,
+  ArrowDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-// Sample data for Mary's Nyonya Kuih business
-const incomeData = {
-  daily: [
-    { period: "Mon", amount: 450 },
-    { period: "Tue", amount: 320 },
-    { period: "Wed", amount: 580 },
-    { period: "Thu", amount: 420 },
-    { period: "Fri", amount: 690 },
-    { period: "Sat", amount: 820 },
-    { period: "Sun", amount: 650 }
-  ],
-  weekly: [
-    { period: "Week 1", amount: 3200 },
-    { period: "Week 2", amount: 2800 },
-    { period: "Week 3", amount: 3600 },
-    { period: "Week 4", amount: 4100 }
-  ],
-  monthly: [
-    { period: "Jan", amount: 12500 },
-    { period: "Feb", amount: 11200 },
-    { period: "Mar", amount: 13800 },
-    { period: "Apr", amount: 15200 },
-    { period: "May", amount: 14600 },
-    { period: "Jun", amount: 16100 }
-  ]
-};
-
-const transactionTimeData = [
-  { hour: "8AM", transactions: 12 },
-  { hour: "9AM", transactions: 25 },
-  { hour: "10AM", transactions: 45 },
-  { hour: "11AM", transactions: 38 },
-  { hour: "12PM", transactions: 52 },
-  { hour: "1PM", transactions: 48 },
-  { hour: "2PM", transactions: 35 },
-  { hour: "3PM", transactions: 42 },
-  { hour: "4PM", transactions: 58 },
-  { hour: "5PM", transactions: 65 },
-  { hour: "6PM", transactions: 38 },
-  { hour: "7PM", transactions: 22 }
-];
-
 const MerchantDashboard = () => {
-  const [activeTab, setActiveTab] = useState("daily");
   const navigate = useNavigate();
+  const [selectedPeriod, setSelectedPeriod] = useState("daily");
 
   const handleLogout = () => {
     navigate("/login");
@@ -72,7 +32,6 @@ const MerchantDashboard = () => {
 
   const sidebarItems = [
     { icon: Home, label: "Dashboard", active: true, path: "/merchant-dashboard" },
-    { icon: CreditCard, label: "IC/MyKad", path: "/ic-mykad" },
     { icon: QrCode, label: "QR Payment", path: "/qr-payment" },
     { icon: DollarSign, label: "Loans", path: "/loans" },
     { icon: History, label: "Transaction History", path: "/transaction-history" },
@@ -91,6 +50,62 @@ const MerchantDashboard = () => {
       type: "info"
     }
   ];
+
+  const incomeData = {
+    daily: {
+      current: 1245.25,
+      previous: 1180.50,
+      data: [
+        { name: 'Mon', amount: 1200 },
+        { name: 'Tue', amount: 1350 },
+        { name: 'Wed', amount: 980 },
+        { name: 'Thu', amount: 1245 },
+        { name: 'Fri', amount: 1670 },
+        { name: 'Sat', amount: 1890 },
+        { name: 'Sun', amount: 1456 }
+      ]
+    },
+    weekly: {
+      current: 8745.75,
+      previous: 8200.25,
+      data: [
+        { name: 'Week 1', amount: 8200 },
+        { name: 'Week 2', amount: 8745 },
+        { name: 'Week 3', amount: 9200 },
+        { name: 'Week 4', amount: 8900 }
+      ]
+    },
+    monthly: {
+      current: 34985.50,
+      previous: 32800.75,
+      data: [
+        { name: 'Jan', amount: 32800 },
+        { name: 'Feb', amount: 34985 },
+        { name: 'Mar', amount: 36200 },
+        { name: 'Apr', amount: 35100 }
+      ]
+    }
+  };
+
+  const transactionTimeData = [
+    { time: '8AM', transactions: 5 },
+    { time: '9AM', transactions: 12 },
+    { time: '10AM', transactions: 25 },
+    { time: '11AM', transactions: 35 },
+    { time: '12PM', transactions: 45 },
+    { time: '1PM', transactions: 38 },
+    { time: '2PM', transactions: 28 },
+    { time: '3PM', transactions: 32 },
+    { time: '4PM', transactions: 40 },
+    { time: '5PM', transactions: 48 },
+    { time: '6PM', transactions: 35 },
+    { time: '7PM', transactions: 22 },
+    { time: '8PM', transactions: 15 }
+  ];
+
+  const currentData = incomeData[selectedPeriod as keyof typeof incomeData];
+  const percentageChange = ((currentData.current - currentData.previous) / currentData.previous * 100).toFixed(1);
+  const isIncrease = currentData.current > currentData.previous;
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -186,70 +201,74 @@ const MerchantDashboard = () => {
           {/* Income Overview */}
           <Card className="mb-8">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5" />
-                Income Overview
-              </CardTitle>
-              <CardDescription>Track your daily, weekly, and monthly earnings</CardDescription>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <DollarSign className="w-5 h-5" />
+                    Income Overview
+                  </CardTitle>
+                  <CardDescription>Track your business income performance</CardDescription>
+                </div>
+                <Tabs value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                  <TabsList>
+                    <TabsTrigger value="daily">Daily</TabsTrigger>
+                    <TabsTrigger value="weekly">Weekly</TabsTrigger>
+                    <TabsTrigger value="monthly">Monthly</TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
             </CardHeader>
             <CardContent>
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="daily">Daily</TabsTrigger>
-                  <TabsTrigger value="weekly">Weekly</TabsTrigger>
-                  <TabsTrigger value="monthly">Monthly</TabsTrigger>
-                </TabsList>
-                
-                {Object.entries(incomeData).map(([period, data]) => (
-                  <TabsContent key={period} value={period} className="mt-6">
-                    <div className="h-80">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={data}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis dataKey="period" />
-                          <YAxis />
-                          <Tooltip 
-                            formatter={(value) => [`RM ${value}`, 'Income']}
-                            labelFormatter={(label) => `Period: ${label}`}
-                          />
-                          <Bar dataKey="amount" fill="hsl(var(--primary))" />
-                        </BarChart>
-                      </ResponsiveContainer>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Current {selectedPeriod} income</p>
+                      <p className="text-2xl font-bold text-foreground">RM {currentData.current.toLocaleString()}</p>
                     </div>
-                  </TabsContent>
-                ))}
-              </Tabs>
+                    <div className={`flex items-center gap-1 ${isIncrease ? 'text-green-500' : 'text-red-500'}`}>
+                      {isIncrease ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />}
+                      <span className="text-sm font-medium">{percentageChange}%</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Previous {selectedPeriod}: RM {currentData.previous.toLocaleString()}
+                  </p>
+                </div>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={currentData.data}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Line type="monotone" dataKey="amount" stroke="#8884d8" strokeWidth={2} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
-          {/* Transaction Times */}
+          {/* Transaction Time Analysis */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="w-5 h-5" />
-                Peak Transaction Hours
+                Peak Transaction Times
               </CardTitle>
-              <CardDescription>When your customers are most active</CardDescription>
+              <CardDescription>When customers buy your products most</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-80">
+              <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={transactionTimeData}>
+                  <BarChart data={transactionTimeData}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="hour" />
+                    <XAxis dataKey="time" />
                     <YAxis />
-                    <Tooltip 
-                      formatter={(value) => [`${value} transactions`, 'Count']}
-                      labelFormatter={(label) => `Time: ${label}`}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="transactions" 
-                      stroke="hsl(var(--primary))" 
-                      strokeWidth={2}
-                      dot={{ fill: "hsl(var(--primary))" }}
-                    />
-                  </LineChart>
+                    <Tooltip />
+                    <Bar dataKey="transactions" fill="#82ca9d" />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>
