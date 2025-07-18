@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { 
@@ -20,18 +21,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSelector from "@/components/LanguageSelector";
 
 const Dashboard = () => {
+  const { t } = useLanguage();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [balanceVisible, setBalanceVisible] = useState(true);
   const location = useLocation();
 
   const navigationItems = [
-    { title: "Dashboard", url: "/dashboard", icon: Home },
+    { title: t('dashboard'), url: "/dashboard", icon: Home },
     { title: "Register Business", url: "/business", icon: Building2 },
     { title: "Add IC/MyKad", url: "/verification", icon: CreditCard },
-    { title: "QR Payment", url: "/qr-payment", icon: QrCode },
-    { title: "Profile", url: "/profile", icon: User },
+    { title: t('qrPayment'), url: "/qr-payment", icon: QrCode },
+    { title: t('profile'), url: "/profile", icon: User },
     { title: "Settings", url: "/settings", icon: Settings },
   ];
 
@@ -63,7 +67,7 @@ const Dashboard = () => {
           <Menu className="h-6 w-6" />
         </Button>
         <h1 className="text-lg font-semibold">Banking Dashboard</h1>
-        <div className="w-10" />
+        <LanguageSelector />
       </div>
 
       {/* Mobile Sidebar Overlay */}
@@ -86,7 +90,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <h2 className="font-bold text-foreground">MyBank</h2>
-                  <p className="text-xs text-muted-foreground">Digital Banking</p>
+                  <p className="text-xs text-muted-foreground">{t('digitalBanking')}</p>
                 </div>
               </div>
               <Button
@@ -139,13 +143,18 @@ const Dashboard = () => {
         <main className="flex-1 lg:ml-0">
           <div className="p-6 space-y-6">
             {/* Welcome Section */}
-            <div className="space-y-2">
-              <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
-                Welcome back, John! 👋
-              </h1>
-              <p className="text-muted-foreground">
-                Here's what's happening with your accounts today.
-              </p>
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
+                  Welcome back, John! 👋
+                </h1>
+                <p className="text-muted-foreground">
+                  Here's what's happening with your accounts today.
+                </p>
+              </div>
+              <div className="hidden lg:block">
+                <LanguageSelector />
+              </div>
             </div>
 
             {/* Account Balance Cards */}

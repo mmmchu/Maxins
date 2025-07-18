@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSelector from "@/components/LanguageSelector";
 
 const QRPayment = () => {
   const { t } = useLanguage();
@@ -108,19 +109,22 @@ const QRPayment = () => {
       <div className="flex-1 p-8">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
-          <div className="mb-8 flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/merchant-dashboard")}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">{t('qrPayment')}</h1>
-              <p className="text-muted-foreground">{t('shareQrCode')}</p>
+          <div className="mb-8 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/merchant-dashboard")}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <div>
+                <h1 className="text-3xl font-bold text-foreground mb-2">{t('qrPayment')}</h1>
+                <p className="text-muted-foreground">{t('shareQrCode')}</p>
+              </div>
             </div>
+            <LanguageSelector />
           </div>
 
           {/* QR Code Display */}

@@ -21,6 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSelector from "@/components/LanguageSelector";
 
 const MerchantDashboard = () => {
   const { t } = useLanguage();
@@ -180,40 +181,44 @@ const MerchantDashboard = () => {
       {/* Main Content */}
       <div className="flex-1 p-8">
         <div className="max-w-7xl mx-auto">
-          {/* Header with Notification Bell */}
+          {/* Header with Language Selector and Notification Bell */}
           <div className="mb-8 flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-foreground mb-2">{t('dashboard')}</h1>
               <p className="text-muted-foreground">{t('welcomeBack')}</p>
             </div>
             
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline" size="icon" className="relative">
-                  <Bell className="w-5 h-5" />
-                  <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-red-500 text-white text-xs">
-                    {notifications.length}
-                  </Badge>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80" align="end">
-                <div className="space-y-4">
-                  <h3 className="font-semibold text-foreground">{t('notifications')}</h3>
-                  {notifications.map((notification) => (
-                    <div 
-                      key={notification.id} 
-                      className={`p-3 rounded-lg ${
-                        notification.type === 'success' 
-                          ? 'bg-green-50 border border-green-200' 
-                          : 'bg-muted'
-                      }`}
-                    >
-                      <p className="text-sm text-foreground">{notification.message}</p>
-                    </div>
-                  ))}
-                </div>
-              </PopoverContent>
-            </Popover>
+            <div className="flex items-center gap-4">
+              <LanguageSelector />
+              
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" size="icon" className="relative">
+                    <Bell className="w-5 h-5" />
+                    <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-red-500 text-white text-xs">
+                      {notifications.length}
+                    </Badge>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80" align="end">
+                  <div className="space-y-4">
+                    <h3 className="font-semibold text-foreground">{t('notifications')}</h3>
+                    {notifications.map((notification) => (
+                      <div 
+                        key={notification.id} 
+                        className={`p-3 rounded-lg ${
+                          notification.type === 'success' 
+                            ? 'bg-green-50 border border-green-200' 
+                            : 'bg-muted'
+                        }`}
+                      >
+                        <p className="text-sm text-foreground">{notification.message}</p>
+                      </div>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
 
           {/* Income Overview */}

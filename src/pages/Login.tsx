@@ -9,7 +9,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguage } from "@/contexts/LanguageContext";
-import LanguageSelector from "@/components/LanguageSelector";
 import bankingHero from "@/assets/banking-hero.jpg";
 
 const Login = () => {
@@ -139,9 +138,6 @@ const Login = () => {
         <div className="w-full max-w-2xl mx-auto animate-slide-up">
           <Card className="shadow-card border-border">
             <CardHeader className="space-y-2 text-center">
-              <div className="flex justify-end mb-4">
-                <LanguageSelector />
-              </div>
               <div className="mx-auto w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mb-4">
                 <Shield className="h-8 w-8 text-primary-foreground" />
               </div>
