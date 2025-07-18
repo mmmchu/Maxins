@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -21,8 +20,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const MerchantDashboard = () => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [selectedPeriod, setSelectedPeriod] = useState("daily");
 
@@ -31,10 +32,10 @@ const MerchantDashboard = () => {
   };
 
   const sidebarItems = [
-    { icon: Home, label: "Dashboard", active: true, path: "/merchant-dashboard" },
-    { icon: QrCode, label: "QR Payment", path: "/qr-payment" },
-    { icon: DollarSign, label: "Loans", path: "/loans" },
-    { icon: History, label: "Transaction History", path: "/transaction-history" }
+    { icon: Home, label: t('dashboard'), active: true, path: "/merchant-dashboard" },
+    { icon: QrCode, label: t('qrPayment'), path: "/qr-payment" },
+    { icon: DollarSign, label: t('loans'), path: "/loans" },
+    { icon: History, label: t('transactionHistory'), path: "/transaction-history" }
   ];
 
   const notifications = [
@@ -125,7 +126,7 @@ const MerchantDashboard = () => {
           </div>
           <div>
             <h2 className="text-lg font-semibold text-foreground">NiagaNow</h2>
-            <p className="text-sm text-muted-foreground">Digital Banking</p>
+            <p className="text-sm text-muted-foreground">{t('digitalBanking')}</p>
           </div>
         </div>
 
@@ -159,8 +160,8 @@ const MerchantDashboard = () => {
                 <User className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
-                <p className="font-medium text-foreground">Mary</p>
-                <p className="text-sm text-muted-foreground">Nyonya Kuih Seller</p>
+                <p className="font-medium text-foreground">{t('mary')}</p>
+                <p className="text-sm text-muted-foreground">{t('nyonyaKuihSeller')}</p>
               </div>
             </div>
           </Button>
@@ -171,7 +172,7 @@ const MerchantDashboard = () => {
             onClick={handleLogout}
           >
             <LogOut className="w-5 h-5 mr-3" />
-            Log Out
+            {t('logOut')}
           </Button>
         </div>
       </div>
@@ -182,8 +183,8 @@ const MerchantDashboard = () => {
           {/* Header with Notification Bell */}
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
-              <p className="text-muted-foreground">Welcome back, Mary! Here's your business overview.</p>
+              <h1 className="text-3xl font-bold text-foreground mb-2">{t('dashboard')}</h1>
+              <p className="text-muted-foreground">{t('welcomeBack')}</p>
             </div>
             
             <Popover>
@@ -197,7 +198,7 @@ const MerchantDashboard = () => {
               </PopoverTrigger>
               <PopoverContent className="w-80" align="end">
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-foreground">Notifications</h3>
+                  <h3 className="font-semibold text-foreground">{t('notifications')}</h3>
                   {notifications.map((notification) => (
                     <div 
                       key={notification.id} 
@@ -222,15 +223,15 @@ const MerchantDashboard = () => {
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     <DollarSign className="w-5 h-5" />
-                    Income Overview
+                    {t('incomeOverview')}
                   </CardTitle>
-                  <CardDescription>Track your business income performance</CardDescription>
+                  <CardDescription>{t('trackIncome')}</CardDescription>
                 </div>
                 <Tabs value={selectedPeriod} onValueChange={setSelectedPeriod}>
                   <TabsList>
-                    <TabsTrigger value="daily">Daily</TabsTrigger>
-                    <TabsTrigger value="weekly">Weekly</TabsTrigger>
-                    <TabsTrigger value="monthly">Monthly</TabsTrigger>
+                    <TabsTrigger value="daily">{t('daily')}</TabsTrigger>
+                    <TabsTrigger value="weekly">{t('weekly')}</TabsTrigger>
+                    <TabsTrigger value="monthly">{t('monthly')}</TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
@@ -240,7 +241,9 @@ const MerchantDashboard = () => {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-muted-foreground">Current {selectedPeriod} income</p>
+                      <p className="text-sm text-muted-foreground">
+                        {t('currentIncome').replace('{period}', t(selectedPeriod))}
+                      </p>
                       <p className="text-2xl font-bold text-foreground">RM {currentData.current.toLocaleString()}</p>
                     </div>
                     <div className={`flex items-center gap-1 ${isIncrease ? 'text-green-500' : 'text-red-500'}`}>
@@ -249,7 +252,7 @@ const MerchantDashboard = () => {
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Previous {selectedPeriod}: RM {currentData.previous.toLocaleString()}
+                    {t('previousIncome').replace('{period}', t(selectedPeriod))}: RM {currentData.previous.toLocaleString()}
                   </p>
                 </div>
                 <div className="h-64">
@@ -272,9 +275,9 @@ const MerchantDashboard = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="w-5 h-5" />
-                Peak Transaction Times
+                {t('peakTransactionTimes')}
               </CardTitle>
-              <CardDescription>When customers buy your products most</CardDescription>
+              <CardDescription>{t('whenCustomersBuy')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-64">

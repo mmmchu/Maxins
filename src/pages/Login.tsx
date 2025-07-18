@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, Shield, Smartphone, CreditCard } from "lucide-react";
@@ -7,9 +8,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSelector from "@/components/LanguageSelector";
 import bankingHero from "@/assets/banking-hero.jpg";
 
 const Login = () => {
+  const { t } = useLanguage();
   const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const [loginData, setLoginData] = useState({
@@ -135,19 +139,22 @@ const Login = () => {
         <div className="w-full max-w-2xl mx-auto animate-slide-up">
           <Card className="shadow-card border-border">
             <CardHeader className="space-y-2 text-center">
+              <div className="flex justify-end mb-4">
+                <LanguageSelector />
+              </div>
               <div className="mx-auto w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mb-4">
                 <Shield className="h-8 w-8 text-primary-foreground" />
               </div>
-              <CardTitle className="text-2xl font-bold">Welcome to NiagaNow</CardTitle>
+              <CardTitle className="text-2xl font-bold">{t('welcomeToNiagaNow')}</CardTitle>
               <CardDescription>
-                Your secure banking platform
+                {t('secureBinding')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="login">Login</TabsTrigger>
-                  <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                  <TabsTrigger value="login">{t('login')}</TabsTrigger>
+                  <TabsTrigger value="signup">{t('signup')}</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent 
@@ -156,12 +163,12 @@ const Login = () => {
                 >
                   <div className="space-y-4 pt-4">
                     <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
+                      <Label htmlFor="email">{t('emailAddress')}</Label>
                       <Input
                         id="email"
                         name="email"
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder={t('enterEmail')}
                         value={loginData.email}
                         onChange={handleLoginChange}
                         className="h-11"
@@ -169,13 +176,13 @@ const Login = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="password">Password</Label>
+                      <Label htmlFor="password">{t('password')}</Label>
                       <div className="relative">
                         <Input
                           id="password"
                           name="password"
                           type={showPassword ? "text" : "password"}
-                          placeholder="Enter your password"
+                          placeholder={t('enterPassword')}
                           value={loginData.password}
                           onChange={handleLoginChange}
                           className="h-11 pr-10"
@@ -203,7 +210,7 @@ const Login = () => {
                       to="/forgot-password" 
                       className="text-primary hover:text-primary-glow transition-colors"
                     >
-                      Forgot password?
+                      {t('forgotPassword')}
                     </Link>
                   </div>
 
@@ -213,12 +220,12 @@ const Login = () => {
                       className="w-full h-11 text-base"
                       onClick={handleLogin}
                     >
-                      Sign In
+                      {t('signIn')}
                     </Button>
                   </div>
 
                   <div className="text-xs text-center text-muted-foreground pt-2">
-                    Test credentials: test@gmail.com / 12345678Maxins*
+                    {t('testCredentials')}
                   </div>
                 </TabsContent>
                 
@@ -229,12 +236,12 @@ const Login = () => {
                   <div className="space-y-4 pt-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="name">Full Name</Label>
+                        <Label htmlFor="name">{t('fullName')}</Label>
                         <Input
                           id="name"
                           name="name"
                           type="text"
-                          placeholder="Enter your full name"
+                          placeholder={t('enterFullName')}
                           value={signupData.name}
                           onChange={handleSignupChange}
                           className="h-11"
@@ -243,15 +250,15 @@ const Login = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="gender">Gender</Label>
+                        <Label htmlFor="gender">{t('gender')}</Label>
                         <Select onValueChange={handleGenderChange} value={signupData.gender}>
                           <SelectTrigger className="h-11">
-                            <SelectValue placeholder="Select your gender" />
+                            <SelectValue placeholder={t('selectGender')} />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="male">Male</SelectItem>
-                            <SelectItem value="female">Female</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
+                            <SelectItem value="male">{t('male')}</SelectItem>
+                            <SelectItem value="female">{t('female')}</SelectItem>
+                            <SelectItem value="other">{t('other')}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -259,12 +266,12 @@ const Login = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="email">Email Address</Label>
+                        <Label htmlFor="email">{t('emailAddress')}</Label>
                         <Input
                           id="email"
                           name="email"
                           type="email"
-                          placeholder="Enter your email"
+                          placeholder={t('enterEmail')}
                           value={signupData.email}
                           onChange={handleSignupChange}
                           className="h-11"
@@ -273,12 +280,12 @@ const Login = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="businessName">Business Name</Label>
+                        <Label htmlFor="businessName">{t('businessName')}</Label>
                         <Input
                           id="businessName"
                           name="businessName"
                           type="text"
-                          placeholder="Enter your business name"
+                          placeholder={t('enterBusinessName')}
                           value={signupData.businessName}
                           onChange={handleSignupChange}
                           className="h-11"
@@ -289,12 +296,12 @@ const Login = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="phoneNumber">Phone Number</Label>
+                        <Label htmlFor="phoneNumber">{t('phoneNumber')}</Label>
                         <Input
                           id="phoneNumber"
                           name="phoneNumber"
                           type="tel"
-                          placeholder="Enter your phone number"
+                          placeholder={t('enterPhoneNumber')}
                           value={signupData.phoneNumber}
                           onChange={handleSignupChange}
                           className="h-11"
@@ -303,12 +310,12 @@ const Login = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="icNumber">IC Number (MyKad)</Label>
+                        <Label htmlFor="icNumber">{t('icNumber')}</Label>
                         <Input
                           id="icNumber"
                           name="icNumber"
                           type="text"
-                          placeholder="Enter your IC number"
+                          placeholder={t('enterIcNumber')}
                           value={signupData.icNumber}
                           onChange={handleSignupChange}
                           className="h-11"
@@ -318,12 +325,12 @@ const Login = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="businessRegNumber">Business Registration Number</Label>
+                      <Label htmlFor="businessRegNumber">{t('businessRegNumber')}</Label>
                       <Input
                         id="businessRegNumber"
                         name="businessRegNumber"
                         type="text"
-                        placeholder="Enter your business registration number"
+                        placeholder={t('enterBusinessRegNumber')}
                         value={signupData.businessRegNumber}
                         onChange={handleSignupChange}
                         className="h-11"
@@ -338,19 +345,19 @@ const Login = () => {
                       className="w-full h-11 text-base"
                       onClick={handleSignup}
                     >
-                      Create Account
+                      {t('createAccount')}
                     </Button>
                   </div>
 
                   <div className="text-xs text-center text-muted-foreground pt-2">
-                    Test data: Phone: 0123456789, Business Reg: 0123456789123
+                    {t('testData')}
                   </div>
                 </TabsContent>
               </Tabs>
 
               <div className="pt-4 border-t border-border">
                 <p className="text-xs text-center text-muted-foreground">
-                  Protected by bank-level security. Your data is encrypted and safe.
+                  {t('protectedBySecurity')}
                 </p>
               </div>
             </CardContent>

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -13,8 +14,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const QRPayment = () => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -22,24 +25,19 @@ const QRPayment = () => {
   };
 
   const sidebarItems = [
-    { icon: Home, label: "Dashboard", active: false, path: "/merchant-dashboard" },
-    { icon: QrCode, label: "QR Payment", active: true, path: "/qr-payment" },
-    { icon: DollarSign, label: "Loans", path: "/loans" },
-    { icon: History, label: "Transaction History", path: "/transaction-history" }
+    { icon: Home, label: t('dashboard'), active: false, path: "/merchant-dashboard" },
+    { icon: QrCode, label: t('qrPayment'), active: true, path: "/qr-payment" },
+    { icon: DollarSign, label: t('loans'), path: "/loans" },
+    { icon: History, label: t('transactionHistory'), path: "/transaction-history" }
   ];
 
   const handleDownload = () => {
-    // In a real app, this would download the QR code
     console.log("Downloading QR code...");
   };
 
   const handleShare = () => {
-    // In a real app, this would share the QR code
     console.log("Sharing QR code...");
   };
-
-  // Mock QR code data - in real app this would be generated based on business details
-  const qrCodeData = "https://duitnow.my/pay/mary-nyonya-kuih";
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -55,7 +53,7 @@ const QRPayment = () => {
           </div>
           <div>
             <h2 className="text-lg font-semibold text-foreground">NiagaNow</h2>
-            <p className="text-sm text-muted-foreground">Digital Banking</p>
+            <p className="text-sm text-muted-foreground">{t('digitalBanking')}</p>
           </div>
         </div>
 
@@ -89,8 +87,8 @@ const QRPayment = () => {
                 <User className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
-                <p className="font-medium text-foreground">Mary</p>
-                <p className="text-sm text-muted-foreground">Nyonya Kuih Seller</p>
+                <p className="font-medium text-foreground">{t('mary')}</p>
+                <p className="text-sm text-muted-foreground">{t('nyonyaKuihSeller')}</p>
               </div>
             </div>
           </Button>
@@ -101,7 +99,7 @@ const QRPayment = () => {
             onClick={handleLogout}
           >
             <LogOut className="w-5 h-5 mr-3" />
-            Log Out
+            {t('logOut')}
           </Button>
         </div>
       </div>
@@ -120,8 +118,8 @@ const QRPayment = () => {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">QR Payment</h1>
-              <p className="text-muted-foreground">Share your QR code with customers to receive payments</p>
+              <h1 className="text-3xl font-bold text-foreground mb-2">{t('qrPayment')}</h1>
+              <p className="text-muted-foreground">{t('shareQrCode')}</p>
             </div>
           </div>
 
@@ -133,8 +131,8 @@ const QRPayment = () => {
                 <div className="w-16 h-16 bg-gradient-primary rounded-full flex items-center justify-center mb-4">
                   <QrCode className="w-8 h-8 text-primary-foreground" />
                 </div>
-                <CardTitle className="text-2xl font-bold text-foreground">Mary's Nyonya Kuih</CardTitle>
-                <CardDescription className="text-lg">Traditional Kuih & Desserts</CardDescription>
+                <CardTitle className="text-2xl font-bold text-foreground">{t('nyonyaKuih')}</CardTitle>
+                <CardDescription className="text-lg">{t('traditionalKuih')}</CardDescription>
               </CardHeader>
               
               <CardContent className="flex flex-col items-center space-y-6">
@@ -148,7 +146,7 @@ const QRPayment = () => {
                 </div>
                 
                 <p className="text-sm text-muted-foreground text-center">
-                  Scan this QR code to pay Mary's Nyonya Kuih
+                  {t('scanQrCode')}
                 </p>
               </CardContent>
             </Card>
@@ -159,57 +157,57 @@ const QRPayment = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <DollarSign className="w-5 h-5" />
-                    Payment Information
+                    {t('paymentInformation')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Business Name:</span>
-                    <span className="font-medium">Mary's Nyonya Kuih</span>
+                    <span className="text-muted-foreground">{t('businessNameLabel')}</span>
+                    <span className="font-medium">{t('nyonyaKuih')}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Owner:</span>
-                    <span className="font-medium">Mary Lim</span>
+                    <span className="text-muted-foreground">{t('owner')}</span>
+                    <span className="font-medium">{t('maryLim')}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Business Type:</span>
-                    <span className="font-medium">Food & Beverage</span>
+                    <span className="text-muted-foreground">{t('businessType')}</span>
+                    <span className="font-medium">{t('foodBeverage')}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Payment Method:</span>
-                    <span className="font-medium">DuitNow QR</span>
+                    <span className="text-muted-foreground">{t('paymentMethod')}</span>
+                    <span className="font-medium">{t('duitnowQr')}</span>
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>How to Use</CardTitle>
+                  <CardTitle>{t('howToUse')}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
                       1
                     </div>
-                    <p className="text-sm text-muted-foreground">Customer opens their banking app</p>
+                    <p className="text-sm text-muted-foreground">{t('step1')}</p>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
                       2
                     </div>
-                    <p className="text-sm text-muted-foreground">They scan your QR code</p>
+                    <p className="text-sm text-muted-foreground">{t('step2')}</p>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
                       3
                     </div>
-                    <p className="text-sm text-muted-foreground">They enter the payment amount</p>
+                    <p className="text-sm text-muted-foreground">{t('step3')}</p>
                   </div>
                   <div className="flex items-start gap-3">
                     <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-medium">
                       4
                     </div>
-                    <p className="text-sm text-muted-foreground">Payment is completed instantly</p>
+                    <p className="text-sm text-muted-foreground">{t('step4')}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -218,11 +216,11 @@ const QRPayment = () => {
               <div className="flex gap-3">
                 <Button onClick={handleDownload} className="flex-1">
                   <Download className="w-4 h-4 mr-2" />
-                  Download QR
+                  {t('downloadQr')}
                 </Button>
                 <Button onClick={handleShare} variant="outline" className="flex-1">
                   <Share2 className="w-4 h-4 mr-2" />
-                  Share QR
+                  {t('shareQr')}
                 </Button>
               </div>
             </div>

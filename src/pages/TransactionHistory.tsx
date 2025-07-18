@@ -8,262 +8,41 @@ import {
   Bell,
   DollarSign,
   History,
-  ArrowUpRight,
-  ArrowDownLeft,
-  Download
+  Download,
+  Calendar,
+  Filter
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useLanguage } from "@/contexts/LanguageContext";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: any) => jsPDF;
+  }
+}
 
 const TransactionHistory = () => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
-  const [selectedMonth, setSelectedMonth] = useState("01");
-  const [selectedYear, setSelectedYear] = useState("2025");
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
 
   const handleLogout = () => {
     navigate("/login");
   };
 
-  const handleExportPDF = () => {
-    const monthName = new Date(parseInt(selectedYear), parseInt(selectedMonth) - 1).toLocaleString('default', { month: 'long' });
-    console.log(`Generating formal transaction history PDF for ${monthName} ${selectedYear}...`);
-    
-    // Create a new window for the PDF content
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) return;
-
-    // Filter transactions for selected month/year
-    const filteredTransactions = transactions.filter(transaction => {
-      const transactionDate = new Date(transaction.date);
-      return transactionDate.getMonth() === parseInt(selectedMonth) - 1 && 
-             transactionDate.getFullYear() === parseInt(selectedYear);
-    });
-
-    // Calculate totals
-    const totalCredit = filteredTransactions
-      .filter(t => t.type === 'credit')
-      .reduce((sum, t) => sum + t.amount, 0);
-    
-    const totalDebit = filteredTransactions
-      .filter(t => t.type === 'debit')
-      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
-
-    const netAmount = totalCredit - totalDebit;
-
-    // Generate formal PDF content
-    const pdfContent = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Bank Statement - ${monthName} ${selectedYear}</title>
-        <style>
-            body { 
-                font-family: 'Times New Roman', serif; 
-                margin: 20px; 
-                line-height: 1.4;
-                color: #000;
-            }
-            .header { 
-                text-align: center; 
-                margin-bottom: 30px; 
-                border-bottom: 2px solid #000;
-                padding-bottom: 20px;
-            }
-            .bank-logo { 
-                font-size: 24px; 
-                font-weight: bold; 
-                color: #1e40af;
-                margin-bottom: 5px;
-            }
-            .statement-title { 
-                font-size: 18px; 
-                font-weight: bold; 
-                margin: 15px 0;
-            }
-            .account-info { 
-                margin: 20px 0;
-                border: 1px solid #ccc;
-                padding: 15px;
-                background-color: #f9f9f9;
-            }
-            .info-row { 
-                display: flex; 
-                justify-content: space-between; 
-                margin: 5px 0; 
-            }
-            .transactions-table { 
-                width: 100%; 
-                border-collapse: collapse; 
-                margin: 20px 0;
-                font-size: 12px;
-            }
-            .transactions-table th, 
-            .transactions-table td { 
-                border: 1px solid #000; 
-                padding: 8px; 
-                text-align: left; 
-            }
-            .transactions-table th { 
-                background-color: #f0f0f0; 
-                font-weight: bold;
-                text-align: center;
-            }
-            .credit { color: #059669; }
-            .debit { color: #dc2626; }
-            .summary { 
-                margin-top: 30px; 
-                border: 2px solid #000;
-                padding: 15px;
-                background-color: #f9f9f9;
-            }
-            .summary-title { 
-                font-weight: bold; 
-                font-size: 14px;
-                margin-bottom: 10px;
-                text-decoration: underline;
-            }
-            .footer { 
-                margin-top: 40px; 
-                font-size: 10px; 
-                text-align: center;
-                border-top: 1px solid #ccc;
-                padding-top: 15px;
-            }
-            .signature-section {
-                margin-top: 40px;
-                text-align: right;
-            }
-            @media print {
-                body { margin: 0; }
-                .no-print { display: none; }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="header">
-            <div class="bank-logo">NIAGANOW DIGITAL BANKING</div>
-            <div>Registered Address: Level 15, Menara IGB, Mid Valley City, 59200 Kuala Lumpur</div>
-            <div>Tel: +603-2282 1111 | Email: info@niaganow.com.my</div>
-        </div>
-
-        <div class="statement-title">BANK STATEMENT / PENYATA BANK</div>
-
-        <div class="account-info">
-            <div class="info-row">
-                <span><strong>Account Holder Name:</strong></span>
-                <span>Mary (Nyonya Kuih Seller)</span>
-            </div>
-            <div class="info-row">
-                <span><strong>Account Number:</strong></span>
-                <span>1234-5678-9012-3456</span>
-            </div>
-            <div class="info-row">
-                <span><strong>Statement Period:</strong></span>
-                <span>${monthName} ${selectedYear}</span>
-            </div>
-            <div class="info-row">
-                <span><strong>Statement Date:</strong></span>
-                <span>${new Date().toLocaleDateString('en-MY')}</span>
-            </div>
-            <div class="info-row">
-                <span><strong>Business Type:</strong></span>
-                <span>Traditional Food & Kuih Trading</span>
-            </div>
-        </div>
-
-        <table class="transactions-table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Transaction ID</th>
-                    <th>Description</th>
-                    <th>Counterparty</th>
-                    <th>Debit (RM)</th>
-                    <th>Credit (RM)</th>
-                    <th>Balance (RM)</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${filteredTransactions.map((transaction, index) => {
-                  const runningBalance = filteredTransactions
-                    .slice(0, index + 1)
-                    .reduce((balance, t) => balance + (t.type === 'credit' ? t.amount : t.amount), 5000); // Starting balance of 5000
-                  
-                  return `
-                    <tr>
-                        <td>${new Date(transaction.date).toLocaleDateString('en-MY')}<br><small>${transaction.time}</small></td>
-                        <td>${transaction.id}</td>
-                        <td>${transaction.description}</td>
-                        <td>${transaction.customer}</td>
-                        <td class="debit">${transaction.type === 'debit' ? Math.abs(transaction.amount).toFixed(2) : '-'}</td>
-                        <td class="credit">${transaction.type === 'credit' ? transaction.amount.toFixed(2) : '-'}</td>
-                        <td>${runningBalance.toFixed(2)}</td>
-                    </tr>
-                  `;
-                }).join('')}
-            </tbody>
-        </table>
-
-        <div class="summary">
-            <div class="summary-title">MONTHLY SUMMARY / RINGKASAN BULANAN</div>
-            <div class="info-row">
-                <span><strong>Total Credit (Kredit):</strong></span>
-                <span class="credit">RM ${totalCredit.toFixed(2)}</span>
-            </div>
-            <div class="info-row">
-                <span><strong>Total Debit (Debit):</strong></span>
-                <span class="debit">RM ${totalDebit.toFixed(2)}</span>
-            </div>
-            <div class="info-row">
-                <span><strong>Net Amount (Jumlah Bersih):</strong></span>
-                <span><strong>RM ${netAmount.toFixed(2)}</strong></span>
-            </div>
-            <div class="info-row">
-                <span><strong>Average Monthly Income:</strong></span>
-                <span class="credit">RM ${totalCredit.toFixed(2)}</span>
-            </div>
-            <div class="info-row">
-                <span><strong>Transaction Count:</strong></span>
-                <span>${filteredTransactions.length} transactions</span>
-            </div>
-        </div>
-
-        <div class="signature-section">
-            <p><strong>This statement is computer generated and does not require signature.</strong></p>
-            <p><em>Penyata ini dijana komputer dan tidak memerlukan tandatangan.</em></p>
-        </div>
-
-        <div class="footer">
-            <p><strong>IMPORTANT NOTICE:</strong> This statement is generated for loan application purposes. Please verify all information before submission.</p>
-            <p><em>NOTIS PENTING: Penyata ini dijana untuk tujuan permohonan pinjaman. Sila sahkan semua maklumat sebelum penyerahan.</em></p>
-            <p>Generated on: ${new Date().toLocaleString('en-MY')} | Page 1 of 1</p>
-        </div>
-
-        <script>
-            window.onload = function() {
-                window.print();
-                setTimeout(function() {
-                    window.close();
-                }, 1000);
-            }
-        </script>
-    </body>
-    </html>
-    `;
-
-    printWindow.document.write(pdfContent);
-    printWindow.document.close();
-  };
-
   const sidebarItems = [
-    { icon: Home, label: "Dashboard", path: "/merchant-dashboard" },
-    { icon: QrCode, label: "QR Payment", path: "/qr-payment" },
-    { icon: DollarSign, label: "Loans", path: "/loans" },
-    { icon: History, label: "Transaction History", active: true, path: "/transaction-history" }
+    { icon: Home, label: t('dashboard'), path: "/merchant-dashboard" },
+    { icon: QrCode, label: t('qrPayment'), path: "/qr-payment" },
+    { icon: DollarSign, label: t('loans'), path: "/loans" },
+    { icon: History, label: t('transactionHistory'), active: true, path: "/transaction-history" }
   ];
 
   const notifications = [
@@ -279,108 +58,138 @@ const TransactionHistory = () => {
     }
   ];
 
-  const transactions = [
+  const mockTransactions = [
     {
       id: "TXN001",
-      date: "2025-01-17",
-      time: "14:30",
-      description: "Kuih Lapis Sale",
-      customer: "Ahmad Hassan",
+      date: "15/01/2024",
+      description: "DuitNow QR Payment - Nasi Lemak Sale",
       amount: 25.50,
-      type: "credit",
       status: "completed"
     },
     {
-      id: "TXN002",
-      date: "2025-01-17",
-      time: "13:15",
-      description: "Onde-onde & Kuih Ketayap",
-      customer: "Siti Nurhaliza",
+      id: "TXN002", 
+      date: "15/01/2024",
+      description: "DuitNow QR Payment - Kuih Lapis",
       amount: 18.00,
-      type: "credit",
       status: "completed"
     },
     {
       id: "TXN003",
-      date: "2025-01-17",
-      time: "12:45",
-      description: "Kuih Dadar & Tart Nenas",
-      customer: "Lim Wei Ming",
-      amount: 32.00,
-      type: "credit",
+      date: "14/01/2024", 
+      description: "DuitNow QR Payment - Onde-onde",
+      amount: 12.00,
       status: "completed"
     },
     {
       id: "TXN004",
-      date: "2025-01-17",
-      time: "11:20",
-      description: "Ingredient Purchase",
-      customer: "Tesco Supermarket",
-      amount: -85.50,
-      type: "debit",
-      status: "completed"
+      date: "14/01/2024",
+      description: "DuitNow QR Payment - Kuih Talam",
+      amount: 15.50,
+      status: "pending"
     },
     {
       id: "TXN005",
-      date: "2025-01-16",
-      time: "16:00",
-      description: "Kuih Bahulu Bulk Order",
-      customer: "Restaurant Seri Rasa",
-      amount: 120.00,
-      type: "credit",
-      status: "completed"
-    },
-    {
-      id: "TXN006",
-      date: "2025-01-16",
-      time: "15:30",
-      description: "Kuih Talam & Pulut Tai Tai",
-      customer: "Nurul Ain",
-      amount: 28.50,
-      type: "credit",
-      status: "completed"
-    },
-    {
-      id: "TXN007",
-      date: "2025-01-16",
-      time: "14:15",
-      description: "Coconut Milk & Pandan",
-      customer: "Pasar Borong",
-      amount: -45.00,
-      type: "debit",
-      status: "completed"
-    },
-    {
-      id: "TXN008",
-      date: "2025-01-16",
-      time: "10:45",
-      description: "Kuih Seri Muka Set",
-      customer: "Fatimah Abdullah",
-      amount: 22.00,
-      type: "credit",
-      status: "completed"
-    },
-    {
-      id: "TXN009",
-      date: "2025-01-15",
-      time: "17:20",
-      description: "Mixed Kuih Platter",
-      customer: "Office Catering Order",
-      amount: 95.00,
-      type: "credit",
-      status: "completed"
-    },
-    {
-      id: "TXN010",
-      date: "2025-01-15",
-      time: "09:30",
-      description: "Gas Cylinder Refill",
-      customer: "Gas Station",
-      amount: -35.00,
-      type: "debit",
+      date: "13/01/2024",
+      description: "DuitNow QR Payment - Pulut Inti",
+      amount: 20.00,
       status: "completed"
     }
   ];
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
+    doc.text("PENYATA BANK / BANK STATEMENT", 105, 25, { align: "center" });
+    
+    doc.setFontSize(16);
+    doc.text("NiagaNow Digital Banking Sdn Bhd", 105, 35, { align: "center" });
+    
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text("Licensed under Bank Negara Malaysia", 105, 42, { align: "center" });
+    doc.text("Registration No: 123456789012", 105, 48, { align: "center" });
+    
+    // Account Information
+    doc.setFont("helvetica", "bold");
+    doc.text("MAKLUMAT AKAUN / ACCOUNT INFORMATION", 20, 65);
+    
+    doc.setFont("helvetica", "normal");
+    doc.text("Nama Pemegang Akaun / Account Holder Name:", 20, 75);
+    doc.text("Mary Lim Siew Choo", 20, 82);
+    
+    doc.text("Nombor Akaun / Account Number:", 20, 92);
+    doc.text("1234567890123456", 20, 99);
+    
+    doc.text("Jenis Akaun / Account Type:", 20, 109);
+    doc.text("Current Account - Business", 20, 116);
+    
+    doc.text("Tempoh Penyata / Statement Period:", 20, 126);
+    const periodText = selectedMonth && selectedYear ? 
+      `${selectedMonth}/${selectedYear}` : 
+      "January 2024 - December 2024";
+    doc.text(periodText, 20, 133);
+    
+    // Transaction Table
+    const tableData = mockTransactions.map(transaction => [
+      transaction.date,
+      transaction.description,
+      transaction.id,
+      `RM ${transaction.amount.toFixed(2)}`,
+      transaction.status === 'completed' ? 'Selesai' : 
+      transaction.status === 'pending' ? 'Dalam Proses' : 'Gagal'
+    ]);
+    
+    doc.autoTable({
+      startY: 145,
+      head: [['Tarikh\nDate', 'Penerangan\nDescription', 'Rujukan\nReference', 'Jumlah\nAmount (RM)', 'Status']],
+      body: tableData,
+      theme: 'grid',
+      styles: { 
+        fontSize: 9,
+        cellPadding: 3,
+        textColor: [0, 0, 0],
+        lineColor: [0, 0, 0],
+        lineWidth: 0.1
+      },
+      headStyles: { 
+        fillColor: [240, 240, 240],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold'
+      },
+      alternateRowStyles: {
+        fillColor: [250, 250, 250]
+      }
+    });
+    
+    // Summary
+    const finalY = (doc as any).lastAutoTable.finalY + 20;
+    doc.setFont("helvetica", "bold");
+    doc.text("RINGKASAN / SUMMARY", 20, finalY);
+    
+    doc.setFont("helvetica", "normal");
+    const totalAmount = mockTransactions.reduce((sum, t) => sum + t.amount, 0);
+    const completedTransactions = mockTransactions.filter(t => t.status === 'completed').length;
+    
+    doc.text(`Jumlah Transaksi / Total Transactions: ${mockTransactions.length}`, 20, finalY + 10);
+    doc.text(`Transaksi Berjaya / Successful Transactions: ${completedTransactions}`, 20, finalY + 20);
+    doc.text(`Jumlah Nilai / Total Value: RM ${totalAmount.toFixed(2)}`, 20, finalY + 30);
+    
+    // Declaration
+    doc.text("PENGISYTIHARAN / DECLARATION", 20, finalY + 50);
+    doc.setFontSize(10);
+    doc.text("Penyata ini dijana secara automatik dan sah untuk tujuan permohonan pinjaman.", 20, finalY + 60);
+    doc.text("This statement is computer-generated and valid for loan application purposes.", 20, finalY + 67);
+    
+    doc.text(`Tarikh Jana / Generated Date: ${new Date().toLocaleDateString('en-GB')}`, 20, finalY + 80);
+    doc.text("NiagaNow Digital Banking Sdn Bhd", 20, finalY + 90);
+    
+    // Save the PDF
+    const fileName = `Transaction_History_${selectedMonth || 'All'}_${selectedYear || new Date().getFullYear()}.pdf`;
+    doc.save(fileName);
+  };
 
   const months = [
     { value: "01", label: "January" },
@@ -397,7 +206,20 @@ const TransactionHistory = () => {
     { value: "12", label: "December" }
   ];
 
-  const years = ["2025", "2024", "2023", "2022"];
+  const years = ["2024", "2023", "2022", "2021"];
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "completed":
+        return <Badge className="bg-green-100 text-green-800">{t('completed')}</Badge>;
+      case "pending":
+        return <Badge className="bg-yellow-100 text-yellow-800">{t('pending')}</Badge>;
+      case "failed":
+        return <Badge className="bg-red-100 text-red-800">{t('failed')}</Badge>;
+      default:
+        return <Badge>{status}</Badge>;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -413,7 +235,7 @@ const TransactionHistory = () => {
           </div>
           <div>
             <h2 className="text-lg font-semibold text-foreground">NiagaNow</h2>
-            <p className="text-sm text-muted-foreground">Digital Banking</p>
+            <p className="text-sm text-muted-foreground">{t('digitalBanking')}</p>
           </div>
         </div>
 
@@ -447,8 +269,8 @@ const TransactionHistory = () => {
                 <User className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
-                <p className="font-medium text-foreground">Mary</p>
-                <p className="text-sm text-muted-foreground">Nyonya Kuih Seller</p>
+                <p className="font-medium text-foreground">{t('mary')}</p>
+                <p className="text-sm text-muted-foreground">{t('nyonyaKuihSeller')}</p>
               </div>
             </div>
           </Button>
@@ -459,7 +281,7 @@ const TransactionHistory = () => {
             onClick={handleLogout}
           >
             <LogOut className="w-5 h-5 mr-3" />
-            Log Out
+            {t('logOut')}
           </Button>
         </div>
       </div>
@@ -469,8 +291,8 @@ const TransactionHistory = () => {
         {/* Header with Notification Bell */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">Transaction History</h1>
-            <p className="text-muted-foreground">Review your past transactions</p>
+            <h1 className="text-3xl font-bold text-foreground mb-2">{t('transactionHistory')}</h1>
+            <p className="text-muted-foreground">{t('viewTransactions')}</p>
           </div>
           
           <Popover>
@@ -484,7 +306,7 @@ const TransactionHistory = () => {
             </PopoverTrigger>
             <PopoverContent className="w-80" align="end">
               <div className="space-y-4">
-                <h3 className="font-semibold text-foreground">Notifications</h3>
+                <h3 className="font-semibold text-foreground">{t('notifications')}</h3>
                 {notifications.map((notification) => (
                   <div key={notification.id} className="p-3 bg-muted rounded-lg">
                     <p className="text-sm text-foreground">{notification.message}</p>
@@ -495,95 +317,83 @@ const TransactionHistory = () => {
           </Popover>
         </div>
 
-        {/* Transaction History Content */}
-        <Card>
+        {/* Filters and Export */}
+        <Card className="mb-6">
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Recent Transactions</CardTitle>
-                <CardDescription>A list of your recent business transactions</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              <Filter className="w-5 h-5" />
+              Filter & Export
+            </CardTitle>
+            <CardDescription>
+              Filter transactions by date and export to PDF
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-4 items-end">
+              <div className="flex-1 min-w-[200px]">
+                <label className="text-sm font-medium mb-2 block">{t('selectMonth')}</label>
+                <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('selectMonth')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {months.map((month) => (
+                      <SelectItem key={month.value} value={month.value}>
+                        {month.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               
-              {/* Export Controls */}
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {months.map((month) => (
-                        <SelectItem key={month.value} value={month.value}>
-                          {month.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  
-                  <Select value={selectedYear} onValueChange={setSelectedYear}>
-                    <SelectTrigger className="w-20">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {years.map((year) => (
-                        <SelectItem key={year} value={year}>
-                          {year}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <Button onClick={handleExportPDF} className="flex items-center gap-2">
-                  <Download className="w-4 h-4" />
-                  Export PDF
-                </Button>
+              <div className="flex-1 min-w-[150px]">
+                <label className="text-sm font-medium mb-2 block">{t('selectYear')}</label>
+                <Select value={selectedYear} onValueChange={setSelectedYear}>
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('selectYear')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map((year) => (
+                      <SelectItem key={year} value={year}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
+              
+              <Button onClick={handleExportPDF} className="flex items-center gap-2">
+                <Download className="w-4 h-4" />
+                {t('exportPdf')}
+              </Button>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Transaction Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('transactionHistory')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Date & Time</TableHead>
-                  <TableHead>Transaction ID</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Customer/Vendor</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Status</TableHead>
+                  <TableHead>{t('transactionId')}</TableHead>
+                  <TableHead>{t('date')}</TableHead>
+                  <TableHead>{t('description')}</TableHead>
+                  <TableHead className="text-right">{t('amount')}</TableHead>
+                  <TableHead>{t('status')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {transactions.map((transaction) => (
+                {mockTransactions.map((transaction) => (
                   <TableRow key={transaction.id}>
-                    <TableCell>
-                      <div className="text-sm">
-                        <div className="font-medium">{transaction.date}</div>
-                        <div className="text-muted-foreground">{transaction.time}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-mono text-sm">{transaction.id}</TableCell>
+                    <TableCell className="font-medium">{transaction.id}</TableCell>
+                    <TableCell>{transaction.date}</TableCell>
                     <TableCell>{transaction.description}</TableCell>
-                    <TableCell>{transaction.customer}</TableCell>
-                    <TableCell>
-                      <div className={`flex items-center gap-1 ${
-                        transaction.type === 'credit' ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {transaction.type === 'credit' ? (
-                          <ArrowUpRight className="w-4 h-4" />
-                        ) : (
-                          <ArrowDownLeft className="w-4 h-4" />
-                        )}
-                        <span className="font-medium">
-                          RM{Math.abs(transaction.amount).toFixed(2)}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant={transaction.status === 'completed' ? 'default' : 'secondary'}>
-                        {transaction.status}
-                      </Badge>
-                    </TableCell>
+                    <TableCell className="text-right">RM {transaction.amount.toFixed(2)}</TableCell>
+                    <TableCell>{getStatusBadge(transaction.status)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

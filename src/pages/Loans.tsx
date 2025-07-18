@@ -19,8 +19,10 @@ import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import LoanEligibilityForm from "@/components/LoanEligibilityForm";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Loans = () => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [showEligibilityForm, setShowEligibilityForm] = useState(false);
 
@@ -29,10 +31,10 @@ const Loans = () => {
   };
 
   const sidebarItems = [
-    { icon: Home, label: "Dashboard", path: "/merchant-dashboard" },
-    { icon: QrCode, label: "QR Payment", path: "/qr-payment" },
-    { icon: DollarSign, label: "Loans", active: true, path: "/loans" },
-    { icon: History, label: "Transaction History", path: "/transaction-history" }
+    { icon: Home, label: t('dashboard'), path: "/merchant-dashboard" },
+    { icon: QrCode, label: t('qrPayment'), path: "/qr-payment" },
+    { icon: DollarSign, label: t('loans'), active: true, path: "/loans" },
+    { icon: History, label: t('transactionHistory'), path: "/transaction-history" }
   ];
 
   const notifications = [
@@ -51,8 +53,8 @@ const Loans = () => {
   const loanProducts = [
     {
       id: 1,
-      name: "SME Working Capital Loan",
-      description: "Quick access to working capital for daily operations",
+      name: t('smeWorkingCapital'),
+      description: t('workingCapitalDesc'),
       interestRate: "5.5% - 8.5%",
       maxAmount: "RM50,000",
       tenure: "12 - 36 months",
@@ -60,8 +62,8 @@ const Loans = () => {
     },
     {
       id: 2,
-      name: "Equipment Financing",
-      description: "Finance new equipment to grow your business",
+      name: t('equipmentFinancing'),
+      description: t('equipmentFinancingDesc'),
       interestRate: "6.0% - 9.0%",
       maxAmount: "RM100,000",
       tenure: "24 - 60 months",
@@ -69,8 +71,8 @@ const Loans = () => {
     },
     {
       id: 3,
-      name: "Business Expansion Loan",
-      description: "Fund your business expansion plans",
+      name: t('businessExpansion'),
+      description: t('businessExpansionDesc'),
       interestRate: "7.0% - 10.0%",
       maxAmount: "RM200,000",
       tenure: "36 - 84 months",
@@ -92,7 +94,7 @@ const Loans = () => {
           </div>
           <div>
             <h2 className="text-lg font-semibold text-foreground">NiagaNow</h2>
-            <p className="text-sm text-muted-foreground">Digital Banking</p>
+            <p className="text-sm text-muted-foreground">{t('digitalBanking')}</p>
           </div>
         </div>
 
@@ -126,8 +128,8 @@ const Loans = () => {
                 <User className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
-                <p className="font-medium text-foreground">Mary</p>
-                <p className="text-sm text-muted-foreground">Nyonya Kuih Seller</p>
+                <p className="font-medium text-foreground">{t('mary')}</p>
+                <p className="text-sm text-muted-foreground">{t('nyonyaKuihSeller')}</p>
               </div>
             </div>
           </Button>
@@ -138,7 +140,7 @@ const Loans = () => {
             onClick={handleLogout}
           >
             <LogOut className="w-5 h-5 mr-3" />
-            Log Out
+            {t('logOut')}
           </Button>
         </div>
       </div>
@@ -148,8 +150,8 @@ const Loans = () => {
         {/* Header with Notification Bell */}
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">Loans</h1>
-            <p className="text-muted-foreground">Explore our loan options to grow your business</p>
+            <h1 className="text-3xl font-bold text-foreground mb-2">{t('loans')}</h1>
+            <p className="text-muted-foreground">{t('exploreLoans')}</p>
           </div>
           
           <Popover>
@@ -163,7 +165,7 @@ const Loans = () => {
             </PopoverTrigger>
             <PopoverContent className="w-80" align="end">
               <div className="space-y-4">
-                <h3 className="font-semibold text-foreground">Notifications</h3>
+                <h3 className="font-semibold text-foreground">{t('notifications')}</h3>
                 {notifications.map((notification) => (
                   <div key={notification.id} className="p-3 bg-muted rounded-lg">
                     <p className="text-sm text-foreground">{notification.message}</p>
@@ -179,10 +181,10 @@ const Loans = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 text-primary" />
-              Check Your Loan Eligibility
+              {t('checkEligibility')}
             </CardTitle>
             <CardDescription>
-              Complete our quick assessment to see if you qualify for a business loan
+              {t('quickAssessment')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -192,7 +194,7 @@ const Loans = () => {
               onClick={() => setShowEligibilityForm(true)}
               className="w-full sm:w-auto"
             >
-              Start Eligibility Check
+              {t('startEligibilityCheck')}
             </Button>
           </CardContent>
         </Card>
@@ -208,21 +210,21 @@ const Loans = () => {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Interest Rate:</span>
+                    <span className="text-muted-foreground">{t('interestRate')}</span>
                     <span className="font-medium">{product.interestRate}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Max Amount:</span>
+                    <span className="text-muted-foreground">{t('maxAmount')}</span>
                     <span className="font-medium">{product.maxAmount}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Tenure:</span>
+                    <span className="text-muted-foreground">{t('tenure')}</span>
                     <span className="font-medium">{product.tenure}</span>
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <p className="text-sm font-medium">Key Features:</p>
+                  <p className="text-sm font-medium">{t('keyFeatures')}</p>
                   <ul className="text-sm text-muted-foreground space-y-1">
                     {product.features.map((feature, index) => (
                       <li key={index} className="flex items-center gap-2">
@@ -238,7 +240,7 @@ const Loans = () => {
                   className="w-full"
                   onClick={() => setShowEligibilityForm(true)}
                 >
-                  Apply Now
+                  {t('applyNow')}
                 </Button>
               </CardContent>
             </Card>
@@ -248,29 +250,29 @@ const Loans = () => {
         {/* Additional Information */}
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Why Choose NiagaNow Business Loans?</CardTitle>
+            <CardTitle>{t('whyChooseNiagaNow')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center space-y-2">
                 <Clock className="w-8 h-8 text-primary mx-auto" />
-                <h3 className="font-semibold">Quick Processing</h3>
+                <h3 className="font-semibold">{t('quickProcessing')}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Get approval within 24-48 hours with minimal documentation
+                  {t('quickProcessingDesc')}
                 </p>
               </div>
               <div className="text-center space-y-2">
                 <CheckCircle2 className="w-8 h-8 text-green-500 mx-auto" />
-                <h3 className="font-semibold">Flexible Terms</h3>
+                <h3 className="font-semibold">{t('flexibleTerms')}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Customized repayment plans to suit your business cash flow
+                  {t('flexibleTermsDesc')}
                 </p>
               </div>
               <div className="text-center space-y-2">
                 <AlertCircle className="w-8 h-8 text-blue-500 mx-auto" />
-                <h3 className="font-semibold">Expert Support</h3>
+                <h3 className="font-semibold">{t('expertSupport')}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Dedicated relationship managers to guide you through the process
+                  {t('expertSupportDesc')}
                 </p>
               </div>
             </div>
