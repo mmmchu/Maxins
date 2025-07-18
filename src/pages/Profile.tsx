@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -19,8 +20,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Profile = () => {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -57,10 +60,10 @@ const Profile = () => {
   };
 
   const sidebarItems = [
-    { icon: Home, label: "Dashboard", path: "/merchant-dashboard" },
-    { icon: QrCode, label: "QR Payment", path: "/qr-payment" },
-    { icon: DollarSign, label: "Loans", path: "/loans" },
-    { icon: History, label: "Transaction History", path: "/transaction-history" }
+    { icon: Home, label: t('dashboard'), path: "/merchant-dashboard" },
+    { icon: QrCode, label: t('qrPayment'), path: "/qr-payment" },
+    { icon: DollarSign, label: t('loans'), path: "/loans" },
+    { icon: History, label: t('transactionHistory'), path: "/transaction-history" }
   ];
 
   const notifications = [
@@ -90,7 +93,7 @@ const Profile = () => {
           </div>
           <div>
             <h2 className="text-lg font-semibold text-foreground">NiagaNow</h2>
-            <p className="text-sm text-muted-foreground">Digital Banking</p>
+            <p className="text-sm text-muted-foreground">{t('digitalBanking')}</p>
           </div>
         </div>
 
@@ -120,8 +123,8 @@ const Profile = () => {
                 <User className="w-5 h-5 text-primary-foreground" />
               </div>
               <div>
-                <p className="font-medium text-foreground">Mary</p>
-                <p className="text-sm text-muted-foreground">Nyonya Kuih Seller</p>
+                <p className="font-medium text-foreground">{t('mary')}</p>
+                <p className="text-sm text-muted-foreground">{t('nyonyaKuihSeller')}</p>
               </div>
             </div>
           </Button>
@@ -132,7 +135,7 @@ const Profile = () => {
             onClick={handleLogout}
           >
             <LogOut className="w-5 h-5 mr-3" />
-            Log Out
+            {t('logOut')}
           </Button>
         </div>
       </div>
@@ -143,8 +146,8 @@ const Profile = () => {
           {/* Header with Notification Bell */}
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2">Profile</h1>
-              <p className="text-muted-foreground">Manage your personal information</p>
+              <h1 className="text-3xl font-bold text-foreground mb-2">{t('profile')}</h1>
+              <p className="text-muted-foreground">{t('manageProfile')}</p>
             </div>
             
             <Popover>
@@ -158,7 +161,7 @@ const Profile = () => {
               </PopoverTrigger>
               <PopoverContent className="w-80" align="end">
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-foreground">Notifications</h3>
+                  <h3 className="font-semibold text-foreground">{t('notifications')}</h3>
                   {notifications.map((notification) => (
                     <div key={notification.id} className="p-3 bg-muted rounded-lg">
                       <p className="text-sm text-foreground">{notification.message}</p>
@@ -176,9 +179,9 @@ const Profile = () => {
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     <User className="w-5 h-5" />
-                    Personal Information
+                    {t('personalInformation')}
                   </CardTitle>
-                  <CardDescription>Your account details and personal information</CardDescription>
+                  <CardDescription>{t('manageProfile')}</CardDescription>
                 </div>
                 <div className="flex gap-2">
                   {isEditing ? (
@@ -189,7 +192,7 @@ const Profile = () => {
                       </Button>
                       <Button size="sm" onClick={handleSave}>
                         <Save className="w-4 h-4 mr-2" />
-                        Save
+                        {t('save')}
                       </Button>
                     </>
                   ) : (
@@ -205,7 +208,7 @@ const Profile = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <Label className="text-sm font-medium text-muted-foreground">Full Name</Label>
+                    <Label className="text-sm font-medium text-muted-foreground">{t('fullName')}</Label>
                     {isEditing ? (
                       <Input
                         value={userProfile.name}
@@ -218,7 +221,7 @@ const Profile = () => {
                   </div>
                   
                   <div>
-                    <Label className="text-sm font-medium text-muted-foreground">IC Number</Label>
+                    <Label className="text-sm font-medium text-muted-foreground">{t('icNumber')}</Label>
                     {isEditing ? (
                       <Input
                         value={userProfile.icNumber}
@@ -250,7 +253,7 @@ const Profile = () => {
                 
                 <div className="space-y-4">
                   <div>
-                    <Label className="text-sm font-medium text-muted-foreground">Telephone Number</Label>
+                    <Label className="text-sm font-medium text-muted-foreground">{t('phoneNumber')}</Label>
                     {isEditing ? (
                       <Input
                         value={userProfile.telephoneNumber}
@@ -263,7 +266,7 @@ const Profile = () => {
                   </div>
                   
                   <div>
-                    <Label className="text-sm font-medium text-muted-foreground">Email</Label>
+                    <Label className="text-sm font-medium text-muted-foreground">{t('emailAddress')}</Label>
                     {isEditing ? (
                       <Input
                         value={userProfile.email}
@@ -276,7 +279,7 @@ const Profile = () => {
                   </div>
                   
                   <div>
-                    <Label className="text-sm font-medium text-muted-foreground">Business Type</Label>
+                    <Label className="text-sm font-medium text-muted-foreground">{t('businessInformation')}</Label>
                     {isEditing ? (
                       <Input
                         value={userProfile.businessType}
@@ -289,7 +292,7 @@ const Profile = () => {
                   </div>
                   
                   <div>
-                    <Label className="text-sm font-medium text-muted-foreground">Business Registration Number</Label>
+                    <Label className="text-sm font-medium text-muted-foreground">{t('businessRegNumber')}</Label>
                     {isEditing ? (
                       <Input
                         value={userProfile.businessRegistrationNumber}
