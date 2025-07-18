@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -139,18 +138,13 @@ const QRPayment = () => {
               </CardHeader>
               
               <CardContent className="flex flex-col items-center space-y-6">
-                {/* QR Code - Using placeholder for now */}
-                <div className="w-64 h-64 bg-white border-2 border-gray-200 rounded-lg flex items-center justify-center">
-                  <div className="w-56 h-56 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <div className="grid grid-cols-8 gap-1">
-                      {Array.from({ length: 64 }, (_, i) => (
-                        <div 
-                          key={i} 
-                          className={`w-2 h-2 ${Math.random() > 0.5 ? 'bg-black' : 'bg-white'}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                {/* QR Code - Using the uploaded image */}
+                <div className="w-64 h-64 bg-white border-2 border-gray-200 rounded-lg flex items-center justify-center p-4">
+                  <img 
+                    src="/lovable-uploads/34f74a28-e5e1-40c6-a860-c9e551cc097d.png" 
+                    alt="DuitNow QR Code for Mary's Nyonya Kuih"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 
                 <p className="text-sm text-muted-foreground text-center">

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle, Loader2, ExternalLink } from "lucide-react";
 
 interface FormData {
   businessName: string;
@@ -55,6 +55,27 @@ const LoanEligibilityForm = ({ onClose }: LoanEligibilityFormProps) => {
     }));
   };
 
+  const banks = [
+    {
+      name: "Maybank",
+      programs: ["SME Growth Financing", "Equipment Financing", "Working Capital Term Loan"],
+      contact: "1-300-88-6688",
+      website: "https://www.maybank2u.com.my/sme"
+    },
+    {
+      name: "CIMB Bank",
+      programs: ["BizChannel@SME", "SME Equipment Financing", "Trade Financing"],
+      contact: "03-6204 7788",
+      website: "https://www.cimb.com.my/sme"
+    },
+    {
+      name: "Public Bank",
+      programs: ["SME Term Loan", "Trade Finance", "Invoice Financing"],
+      contact: "03-2176 8000",
+      website: "https://www.pbebank.com/sme"
+    }
+  ];
+
   if (showResult) {
     return (
       <div className="max-w-2xl mx-auto p-6">
@@ -81,12 +102,25 @@ const LoanEligibilityForm = ({ onClose }: LoanEligibilityFormProps) => {
             </div>
 
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <h3 className="font-semibold text-blue-800 mb-2">Next Steps:</h3>
-              <ul className="text-sm text-blue-700 space-y-1">
-                <li>• Our loan officer will contact you within 2 business days</li>
-                <li>• Prepare your business documents for verification</li>
-                <li>• We'll schedule a meeting to discuss loan terms</li>
-              </ul>
+              <h3 className="font-semibold text-blue-800 mb-4">Recommended Banks:</h3>
+              <div className="space-y-4">
+                {banks.map((bank, index) => (
+                  <div key={index} className="bg-white p-4 rounded-lg border border-blue-100">
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="font-semibold text-blue-900">{bank.name}</h4>
+                      <Button variant="outline" size="sm" asChild>
+                        <a href={bank.website} target="_blank" rel="noopener noreferrer">
+                          Apply <ExternalLink className="w-3 h-3 ml-1" />
+                        </a>
+                      </Button>
+                    </div>
+                    <div className="text-sm text-blue-700 space-y-1">
+                      <p><strong>Programs:</strong> {bank.programs.join(", ")}</p>
+                      <p><strong>Contact:</strong> {bank.contact}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="flex gap-4">
