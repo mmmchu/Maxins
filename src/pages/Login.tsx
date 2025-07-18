@@ -85,8 +85,7 @@ const Login = () => {
                 NiagaNow
               </h1>
             </div>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              Experience the future of banking with our comprehensive digital platform. 
+            <p className="text-xl text-muted-foreground leading-relaxed"> 
               Manage your finances, make payments, and grow your business with confidence.
             </p>
           </div>
