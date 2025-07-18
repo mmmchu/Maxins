@@ -20,13 +20,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useLanguage } from "@/contexts/LanguageContext";
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-
-declare module 'jspdf' {
-  interface jsPDF {
-    autoTable: (options: any) => jsPDF;
-  }
-}
+import autoTable from 'jspdf-autotable';
 
 const TransactionHistory = () => {
   const { t } = useLanguage();
@@ -142,7 +136,7 @@ const TransactionHistory = () => {
       transaction.status === 'pending' ? 'Dalam Proses' : 'Gagal'
     ]);
     
-    doc.autoTable({
+    autoTable(doc, {
       startY: 145,
       head: [['Tarikh\nDate', 'Penerangan\nDescription', 'Rujukan\nReference', 'Jumlah\nAmount (RM)', 'Status']],
       body: tableData,
