@@ -29,11 +29,234 @@ const TransactionHistory = () => {
   };
 
   const handleExportPDF = () => {
-    // Generate PDF export logic here
     const monthName = new Date(parseInt(selectedYear), parseInt(selectedMonth) - 1).toLocaleString('default', { month: 'long' });
-    console.log(`Exporting transactions for ${monthName} ${selectedYear} to PDF...`);
-    // This would typically call a PDF generation library or API
-    alert(`Exporting transactions for ${monthName} ${selectedYear} to PDF...`);
+    console.log(`Generating formal transaction history PDF for ${monthName} ${selectedYear}...`);
+    
+    // Create a new window for the PDF content
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    // Filter transactions for selected month/year
+    const filteredTransactions = transactions.filter(transaction => {
+      const transactionDate = new Date(transaction.date);
+      return transactionDate.getMonth() === parseInt(selectedMonth) - 1 && 
+             transactionDate.getFullYear() === parseInt(selectedYear);
+    });
+
+    // Calculate totals
+    const totalCredit = filteredTransactions
+      .filter(t => t.type === 'credit')
+      .reduce((sum, t) => sum + t.amount, 0);
+    
+    const totalDebit = filteredTransactions
+      .filter(t => t.type === 'debit')
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+
+    const netAmount = totalCredit - totalDebit;
+
+    // Generate formal PDF content
+    const pdfContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Bank Statement - ${monthName} ${selectedYear}</title>
+        <style>
+            body { 
+                font-family: 'Times New Roman', serif; 
+                margin: 20px; 
+                line-height: 1.4;
+                color: #000;
+            }
+            .header { 
+                text-align: center; 
+                margin-bottom: 30px; 
+                border-bottom: 2px solid #000;
+                padding-bottom: 20px;
+            }
+            .bank-logo { 
+                font-size: 24px; 
+                font-weight: bold; 
+                color: #1e40af;
+                margin-bottom: 5px;
+            }
+            .statement-title { 
+                font-size: 18px; 
+                font-weight: bold; 
+                margin: 15px 0;
+            }
+            .account-info { 
+                margin: 20px 0;
+                border: 1px solid #ccc;
+                padding: 15px;
+                background-color: #f9f9f9;
+            }
+            .info-row { 
+                display: flex; 
+                justify-content: space-between; 
+                margin: 5px 0; 
+            }
+            .transactions-table { 
+                width: 100%; 
+                border-collapse: collapse; 
+                margin: 20px 0;
+                font-size: 12px;
+            }
+            .transactions-table th, 
+            .transactions-table td { 
+                border: 1px solid #000; 
+                padding: 8px; 
+                text-align: left; 
+            }
+            .transactions-table th { 
+                background-color: #f0f0f0; 
+                font-weight: bold;
+                text-align: center;
+            }
+            .credit { color: #059669; }
+            .debit { color: #dc2626; }
+            .summary { 
+                margin-top: 30px; 
+                border: 2px solid #000;
+                padding: 15px;
+                background-color: #f9f9f9;
+            }
+            .summary-title { 
+                font-weight: bold; 
+                font-size: 14px;
+                margin-bottom: 10px;
+                text-decoration: underline;
+            }
+            .footer { 
+                margin-top: 40px; 
+                font-size: 10px; 
+                text-align: center;
+                border-top: 1px solid #ccc;
+                padding-top: 15px;
+            }
+            .signature-section {
+                margin-top: 40px;
+                text-align: right;
+            }
+            @media print {
+                body { margin: 0; }
+                .no-print { display: none; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="bank-logo">NIAGANOW DIGITAL BANKING</div>
+            <div>Registered Address: Level 15, Menara IGB, Mid Valley City, 59200 Kuala Lumpur</div>
+            <div>Tel: +603-2282 1111 | Email: info@niaganow.com.my</div>
+        </div>
+
+        <div class="statement-title">BANK STATEMENT / PENYATA BANK</div>
+
+        <div class="account-info">
+            <div class="info-row">
+                <span><strong>Account Holder Name:</strong></span>
+                <span>Mary (Nyonya Kuih Seller)</span>
+            </div>
+            <div class="info-row">
+                <span><strong>Account Number:</strong></span>
+                <span>1234-5678-9012-3456</span>
+            </div>
+            <div class="info-row">
+                <span><strong>Statement Period:</strong></span>
+                <span>${monthName} ${selectedYear}</span>
+            </div>
+            <div class="info-row">
+                <span><strong>Statement Date:</strong></span>
+                <span>${new Date().toLocaleDateString('en-MY')}</span>
+            </div>
+            <div class="info-row">
+                <span><strong>Business Type:</strong></span>
+                <span>Traditional Food & Kuih Trading</span>
+            </div>
+        </div>
+
+        <table class="transactions-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Transaction ID</th>
+                    <th>Description</th>
+                    <th>Counterparty</th>
+                    <th>Debit (RM)</th>
+                    <th>Credit (RM)</th>
+                    <th>Balance (RM)</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${filteredTransactions.map((transaction, index) => {
+                  const runningBalance = filteredTransactions
+                    .slice(0, index + 1)
+                    .reduce((balance, t) => balance + (t.type === 'credit' ? t.amount : t.amount), 5000); // Starting balance of 5000
+                  
+                  return `
+                    <tr>
+                        <td>${new Date(transaction.date).toLocaleDateString('en-MY')}<br><small>${transaction.time}</small></td>
+                        <td>${transaction.id}</td>
+                        <td>${transaction.description}</td>
+                        <td>${transaction.customer}</td>
+                        <td class="debit">${transaction.type === 'debit' ? Math.abs(transaction.amount).toFixed(2) : '-'}</td>
+                        <td class="credit">${transaction.type === 'credit' ? transaction.amount.toFixed(2) : '-'}</td>
+                        <td>${runningBalance.toFixed(2)}</td>
+                    </tr>
+                  `;
+                }).join('')}
+            </tbody>
+        </table>
+
+        <div class="summary">
+            <div class="summary-title">MONTHLY SUMMARY / RINGKASAN BULANAN</div>
+            <div class="info-row">
+                <span><strong>Total Credit (Kredit):</strong></span>
+                <span class="credit">RM ${totalCredit.toFixed(2)}</span>
+            </div>
+            <div class="info-row">
+                <span><strong>Total Debit (Debit):</strong></span>
+                <span class="debit">RM ${totalDebit.toFixed(2)}</span>
+            </div>
+            <div class="info-row">
+                <span><strong>Net Amount (Jumlah Bersih):</strong></span>
+                <span><strong>RM ${netAmount.toFixed(2)}</strong></span>
+            </div>
+            <div class="info-row">
+                <span><strong>Average Monthly Income:</strong></span>
+                <span class="credit">RM ${totalCredit.toFixed(2)}</span>
+            </div>
+            <div class="info-row">
+                <span><strong>Transaction Count:</strong></span>
+                <span>${filteredTransactions.length} transactions</span>
+            </div>
+        </div>
+
+        <div class="signature-section">
+            <p><strong>This statement is computer generated and does not require signature.</strong></p>
+            <p><em>Penyata ini dijana komputer dan tidak memerlukan tandatangan.</em></p>
+        </div>
+
+        <div class="footer">
+            <p><strong>IMPORTANT NOTICE:</strong> This statement is generated for loan application purposes. Please verify all information before submission.</p>
+            <p><em>NOTIS PENTING: Penyata ini dijana untuk tujuan permohonan pinjaman. Sila sahkan semua maklumat sebelum penyerahan.</em></p>
+            <p>Generated on: ${new Date().toLocaleString('en-MY')} | Page 1 of 1</p>
+        </div>
+
+        <script>
+            window.onload = function() {
+                window.print();
+                setTimeout(function() {
+                    window.close();
+                }, 1000);
+            }
+        </script>
+    </body>
+    </html>
+    `;
+
+    printWindow.document.write(pdfContent);
+    printWindow.document.close();
   };
 
   const sidebarItems = [
