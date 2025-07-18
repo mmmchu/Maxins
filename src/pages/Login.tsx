@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, Shield, Smartphone, CreditCard } from "lucide-react";
@@ -214,7 +213,7 @@ const Login = () => {
                       className="w-full h-11 text-base"
                       onClick={handleLogin}
                     >
-                      Sign In Securely
+                      Sign In
                     </Button>
                   </div>
 

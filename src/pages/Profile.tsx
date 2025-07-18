@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -29,7 +28,6 @@ const Profile = () => {
     name: "Mary",
     icNumber: "980123-14-5678",
     idType: "IC",
-    gender: "Female",
     telephoneNumber: "0123456789",
     email: "mary@example.com",
     businessType: "Nyonya Kuih Seller",
@@ -246,24 +244,6 @@ const Profile = () => {
                       </Select>
                     ) : (
                       <p className="text-foreground mt-1">{userProfile.idType}</p>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <Label className="text-sm font-medium text-muted-foreground">Gender</Label>
-                    {isEditing ? (
-                      <Select value={userProfile.gender} onValueChange={(value) => handleInputChange('gender', value)}>
-                        <SelectTrigger className="mt-1">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Male">Male</SelectItem>
-                          <SelectItem value="Female">Female</SelectItem>
-                          <SelectItem value="Other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    ) : (
-                      <p className="text-foreground mt-1">{userProfile.gender}</p>
                     )}
                   </div>
                 </div>
