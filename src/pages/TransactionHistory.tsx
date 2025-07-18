@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
   Home, 
@@ -9,19 +9,31 @@ import {
   DollarSign,
   History,
   ArrowUpRight,
-  ArrowDownLeft
+  ArrowDownLeft,
+  Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const TransactionHistory = () => {
   const navigate = useNavigate();
+  const [selectedMonth, setSelectedMonth] = useState("01");
+  const [selectedYear, setSelectedYear] = useState("2025");
 
   const handleLogout = () => {
     navigate("/login");
+  };
+
+  const handleExportPDF = () => {
+    // Generate PDF export logic here
+    const monthName = new Date(parseInt(selectedYear), parseInt(selectedMonth) - 1).toLocaleString('default', { month: 'long' });
+    console.log(`Exporting transactions for ${monthName} ${selectedYear} to PDF...`);
+    // This would typically call a PDF generation library or API
+    alert(`Exporting transactions for ${monthName} ${selectedYear} to PDF...`);
   };
 
   const sidebarItems = [
@@ -147,6 +159,23 @@ const TransactionHistory = () => {
     }
   ];
 
+  const months = [
+    { value: "01", label: "January" },
+    { value: "02", label: "February" },
+    { value: "03", label: "March" },
+    { value: "04", label: "April" },
+    { value: "05", label: "May" },
+    { value: "06", label: "June" },
+    { value: "07", label: "July" },
+    { value: "08", label: "August" },
+    { value: "09", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" }
+  ];
+
+  const years = ["2025", "2024", "2023", "2022"];
+
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar */}
@@ -246,8 +275,48 @@ const TransactionHistory = () => {
         {/* Transaction History Content */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Transactions</CardTitle>
-            <CardDescription>A list of your recent business transactions</CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Recent Transactions</CardTitle>
+                <CardDescription>A list of your recent business transactions</CardDescription>
+              </div>
+              
+              {/* Export Controls */}
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                    <SelectTrigger className="w-32">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {months.map((month) => (
+                        <SelectItem key={month.value} value={month.value}>
+                          {month.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  
+                  <Select value={selectedYear} onValueChange={setSelectedYear}>
+                    <SelectTrigger className="w-20">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {years.map((year) => (
+                        <SelectItem key={year} value={year}>
+                          {year}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <Button onClick={handleExportPDF} className="flex items-center gap-2">
+                  <Download className="w-4 h-4" />
+                  Export PDF
+                </Button>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <Table>
